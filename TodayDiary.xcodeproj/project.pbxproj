@@ -6,7 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5714648E2D09F383003BE658 /* Diary+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714648D2D09F383003BE658 /* Diary+CoreDataProperties.swift */; };
+		5714648F2D09F383003BE658 /* Diary+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714648C2D09F383003BE658 /* Diary+CoreDataClass.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		5714648C2D09F383003BE658 /* Diary+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Diary+CoreDataClass.swift"; sourceTree = "<group>"; };
+		5714648D2D09F383003BE658 /* Diary+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Diary+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		57965D642D0992E300FC703A /* TodayDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodayDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -45,6 +52,8 @@
 		57965D5B2D0992E300FC703A = {
 			isa = PBXGroup;
 			children = (
+				5714648C2D09F383003BE658 /* Diary+CoreDataClass.swift */,
+				5714648D2D09F383003BE658 /* Diary+CoreDataProperties.swift */,
 				57965D662D0992E300FC703A /* TodayDiary */,
 				57965D652D0992E300FC703A /* Products */,
 			);
@@ -132,6 +141,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5714648E2D09F383003BE658 /* Diary+CoreDataProperties.swift in Sources */,
+				5714648F2D09F383003BE658 /* Diary+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
