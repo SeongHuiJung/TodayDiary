@@ -26,6 +26,7 @@ DerivedData/
 *.hmap
 *.ipa
 *.xcuserstate
+TodayDiary.xcodeproj/project.xcworkspace/xcuserdata/jsh.xcuserdatad/UserInterfaceState.xcuserstate
 
 ## Obj-C/Swift specific
 *.hmap
@@ -82,3 +83,4 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
