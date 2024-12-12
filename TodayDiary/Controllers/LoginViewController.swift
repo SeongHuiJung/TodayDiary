@@ -83,9 +83,9 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
             // 여기에 로그인 성공 후 수행할 작업을 추가하세요.
             print("로그인 성공")
             
-            //            let mainVC = MainViewController()
-            //            mainVC.modalPresentationStyle = .fullScreen
-            //            present(mainVC, animated: true)
+            guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
+            secondVC.modalPresentationStyle = .fullScreen
+            self.present(secondVC, animated: true, completion: nil)
             
             // 암호 기반 인증에 성공한 경우(iCloud), 사용자의 인증 정보를 확인하고 필요한 작업을 수행합니다
             //        case let passwordCredential as ASPasswordCredential:

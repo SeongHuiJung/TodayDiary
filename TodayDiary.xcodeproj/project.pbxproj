@@ -9,11 +9,13 @@
 /* Begin PBXBuildFile section */
 		5714648E2D09F383003BE658 /* Diary+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714648D2D09F383003BE658 /* Diary+CoreDataProperties.swift */; };
 		5714648F2D09F383003BE658 /* Diary+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714648C2D09F383003BE658 /* Diary+CoreDataClass.swift */; };
+		571464AE2D0ADD00003BE658 /* TodayDiary.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = 5714649E2D0ACC89003BE658 /* TodayDiary.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5714648C2D09F383003BE658 /* Diary+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Diary+CoreDataClass.swift"; sourceTree = "<group>"; };
 		5714648D2D09F383003BE658 /* Diary+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Diary+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		5714649F2D0ACC89003BE658 /* TodayDiary.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TodayDiary.xcdatamodel; sourceTree = "<group>"; };
 		57965D642D0992E300FC703A /* TodayDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodayDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -22,7 +24,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				TodayDiary.xcdatamodeld,
 			);
 			target = 57965D632D0992E300FC703A /* TodayDiary */;
 		};
@@ -55,6 +56,7 @@
 			children = (
 				5714648C2D09F383003BE658 /* Diary+CoreDataClass.swift */,
 				5714648D2D09F383003BE658 /* Diary+CoreDataProperties.swift */,
+				5714649E2D0ACC89003BE658 /* TodayDiary.xcdatamodeld */,
 				57965D662D0992E300FC703A /* TodayDiary */,
 				57965D652D0992E300FC703A /* Products */,
 			);
@@ -132,6 +134,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				571464AE2D0ADD00003BE658 /* TodayDiary.xcdatamodeld in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,6 +360,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		5714649E2D0ACC89003BE658 /* TodayDiary.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				5714649F2D0ACC89003BE658 /* TodayDiary.xcdatamodel */,
+			);
+			currentVersion = 5714649F2D0ACC89003BE658 /* TodayDiary.xcdatamodel */;
+			path = TodayDiary.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 57965D5C2D0992E300FC703A /* Project object */;
 }
