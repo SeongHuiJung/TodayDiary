@@ -22,6 +22,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				TodayDiary.xcdatamodeld,
 			);
 			target = 57965D632D0992E300FC703A /* TodayDiary */;
 		};
