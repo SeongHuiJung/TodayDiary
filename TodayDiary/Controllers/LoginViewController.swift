@@ -65,24 +65,22 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
         switch authorization.credential {
         case let appleIdCredential as ASAuthorizationAppleIDCredential:
             // 매번 인증시 얻을 수 있는 정보
-            let userIdentifier = appleIdCredential.user
+            //let userIdentifier = appleIdCredential.user
             
             // 첫 로그인시에만 얻을 수 있는 정보
-            let fullName = appleIdCredential.fullName
-            let email = appleIdCredential.email
-            let identityToken = appleIdCredential.identityToken
-            let authorizationCode = appleIdCredential.authorizationCode
+//            let fullName = appleIdCredential.fullName
+//            let email = appleIdCredential.email
+//            let identityToken = appleIdCredential.identityToken
+//            let authorizationCode = appleIdCredential.authorizationCode
             
             print("Apple ID 로그인에 성공하였습니다.")
-            print("사용자 ID: \(userIdentifier)")
-            print("전체 이름: \(fullName?.givenName ?? "이미 로그인했음") \(fullName?.familyName ?? "")")
-            print("이메일: \(email ?? "이미 로그인했음")")
-            print("Token: \(identityToken!)")
-            print("authorizationCode: \(authorizationCode!)")
+//            print("사용자 ID: \(userIdentifier)")
+//            print("전체 이름: \(fullName?.givenName ?? "이미 로그인했음") \(fullName?.familyName ?? "")")
+//            print("이메일: \(email ?? "이미 로그인했음")")
+//            print("Token: \(identityToken!)")
+//            print("authorizationCode: \(authorizationCode!)")
             
-            // 여기에 로그인 성공 후 수행할 작업을 추가하세요.
-            print("로그인 성공")
-            
+            // 메인 페이지로 이동
             guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
             secondVC.modalPresentationStyle = .fullScreen
             self.present(secondVC, animated: true, completion: nil)
