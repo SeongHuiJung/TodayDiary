@@ -10,13 +10,30 @@
 		5714648E2D09F383003BE658 /* Diary+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714648D2D09F383003BE658 /* Diary+CoreDataProperties.swift */; };
 		5714648F2D09F383003BE658 /* Diary+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714648C2D09F383003BE658 /* Diary+CoreDataClass.swift */; };
 		571464AE2D0ADD00003BE658 /* TodayDiary.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = 5714649E2D0ACC89003BE658 /* TodayDiary.xcdatamodeld */; };
+		57D6B80C2D0C087D00D8AD15 /* Pods_TodayDiary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57D6B80B2D0C087D00D8AD15 /* Pods_TodayDiary.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		57D6B7DA2D0C016800D8AD15 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5714648C2D09F383003BE658 /* Diary+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Diary+CoreDataClass.swift"; sourceTree = "<group>"; };
 		5714648D2D09F383003BE658 /* Diary+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Diary+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		5714649F2D0ACC89003BE658 /* TodayDiary.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TodayDiary.xcdatamodel; sourceTree = "<group>"; };
 		57965D642D0992E300FC703A /* TodayDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodayDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		57D6B80B2D0C087D00D8AD15 /* Pods_TodayDiary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_TodayDiary.framework; path = "../Debug-iphonesimulator/Pods_TodayDiary.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		626269A941CD99B0254754E0 /* Pods-TodayDiary.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodayDiary.debug.xcconfig"; path = "Target Support Files/Pods-TodayDiary/Pods-TodayDiary.debug.xcconfig"; sourceTree = "<group>"; };
+		FB8D3D1C7BDDC2C44F8D4693 /* Pods-TodayDiary.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodayDiary.release.xcconfig"; path = "Target Support Files/Pods-TodayDiary/Pods-TodayDiary.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -45,12 +62,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57D6B80C2D0C087D00D8AD15 /* Pods_TodayDiary.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C0FBE76A494343B87BC5E8F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				57D6B80B2D0C087D00D8AD15 /* Pods_TodayDiary.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		57965D5B2D0992E300FC703A = {
 			isa = PBXGroup;
 			children = (
@@ -59,6 +85,8 @@
 				5714649E2D0ACC89003BE658 /* TodayDiary.xcdatamodeld */,
 				57965D662D0992E300FC703A /* TodayDiary */,
 				57965D652D0992E300FC703A /* Products */,
+				BF93D27847A1F1F70DAF257E /* Pods */,
+				4C0FBE76A494343B87BC5E8F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -70,6 +98,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		BF93D27847A1F1F70DAF257E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				626269A941CD99B0254754E0 /* Pods-TodayDiary.debug.xcconfig */,
+				FB8D3D1C7BDDC2C44F8D4693 /* Pods-TodayDiary.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -77,9 +114,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 57965D7B2D0992E300FC703A /* Build configuration list for PBXNativeTarget "TodayDiary" */;
 			buildPhases = (
+				7170901CA6E6B0055F5290C7 /* [CP] Check Pods Manifest.lock */,
 				57965D602D0992E300FC703A /* Sources */,
 				57965D612D0992E300FC703A /* Frameworks */,
 				57965D622D0992E300FC703A /* Resources */,
+				7A00B7D40E31BA0EE292470F /* [CP] Embed Pods Frameworks */,
+				57D6B7DA2D0C016800D8AD15 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -89,8 +129,6 @@
 				57965D662D0992E300FC703A /* TodayDiary */,
 			);
 			name = TodayDiary;
-			packageProductDependencies = (
-			);
 			productName = TodayDiary;
 			productReference = 57965D642D0992E300FC703A /* TodayDiary.app */;
 			productType = "com.apple.product-type.application";
@@ -140,6 +178,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7170901CA6E6B0055F5290C7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TodayDiary-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7A00B7D40E31BA0EE292470F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TodayDiary/Pods-TodayDiary-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TodayDiary/Pods-TodayDiary-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TodayDiary/Pods-TodayDiary-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		57965D602D0992E300FC703A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -155,6 +235,7 @@
 /* Begin XCBuildConfiguration section */
 		57965D7C2D0992E300FC703A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 626269A941CD99B0254754E0 /* Pods-TodayDiary.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -162,6 +243,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CX8QXFQAMZ;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FSCalendar\"",
+					"$(PROJECT_DIR)/Pods",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TodayDiary/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -188,6 +274,7 @@
 		};
 		57965D7D2D0992E300FC703A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FB8D3D1C7BDDC2C44F8D4693 /* Pods-TodayDiary.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -195,6 +282,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CX8QXFQAMZ;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FSCalendar\"",
+					"$(PROJECT_DIR)/Pods",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TodayDiary/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -256,7 +348,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -319,7 +411,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
