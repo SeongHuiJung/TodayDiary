@@ -10,8 +10,7 @@
 		5714648E2D09F383003BE658 /* Diary+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714648D2D09F383003BE658 /* Diary+CoreDataProperties.swift */; };
 		5714648F2D09F383003BE658 /* Diary+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714648C2D09F383003BE658 /* Diary+CoreDataClass.swift */; };
 		571464AE2D0ADD00003BE658 /* TodayDiary.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = 5714649E2D0ACC89003BE658 /* TodayDiary.xcdatamodeld */; };
-		57D6B7D82D0C016800D8AD15 /* Pods_TodayDiary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93F892D8DF8A45565BC23E26 /* Pods_TodayDiary.framework */; };
-		57D6B7D92D0C016800D8AD15 /* Pods_TodayDiary.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93F892D8DF8A45565BC23E26 /* Pods_TodayDiary.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		57D6B80C2D0C087D00D8AD15 /* Pods_TodayDiary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57D6B80B2D0C087D00D8AD15 /* Pods_TodayDiary.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -21,7 +20,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				57D6B7D92D0C016800D8AD15 /* Pods_TodayDiary.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -33,8 +31,8 @@
 		5714648D2D09F383003BE658 /* Diary+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Diary+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		5714649F2D0ACC89003BE658 /* TodayDiary.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TodayDiary.xcdatamodel; sourceTree = "<group>"; };
 		57965D642D0992E300FC703A /* TodayDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodayDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		57D6B80B2D0C087D00D8AD15 /* Pods_TodayDiary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_TodayDiary.framework; path = "../Debug-iphonesimulator/Pods_TodayDiary.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		626269A941CD99B0254754E0 /* Pods-TodayDiary.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodayDiary.debug.xcconfig"; path = "Target Support Files/Pods-TodayDiary/Pods-TodayDiary.debug.xcconfig"; sourceTree = "<group>"; };
-		93F892D8DF8A45565BC23E26 /* Pods_TodayDiary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TodayDiary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB8D3D1C7BDDC2C44F8D4693 /* Pods-TodayDiary.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TodayDiary.release.xcconfig"; path = "Target Support Files/Pods-TodayDiary/Pods-TodayDiary.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -64,7 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57D6B7D82D0C016800D8AD15 /* Pods_TodayDiary.framework in Frameworks */,
+				57D6B80C2D0C087D00D8AD15 /* Pods_TodayDiary.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,7 +72,7 @@
 		4C0FBE76A494343B87BC5E8F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				93F892D8DF8A45565BC23E26 /* Pods_TodayDiary.framework */,
+				57D6B80B2D0C087D00D8AD15 /* Pods_TodayDiary.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
