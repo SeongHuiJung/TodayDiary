@@ -14,9 +14,9 @@ import FSCalendar
 class CalendarCell: FSCalendarCell {
     
     // 하단 회색 View 추가
-    private let grayView: UIView = {
+    private let emotionView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.lightGray
+        view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -24,7 +24,7 @@ class CalendarCell: FSCalendarCell {
     // 원형 배경
     private let circleBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1) // 원형 배경색
+        view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.masksToBounds = true
         return view
@@ -34,8 +34,8 @@ class CalendarCell: FSCalendarCell {
     private let dayLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .white
         label.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 13)
+        label.textColor = UIColor(red: 0.564, green: 0.477, blue: 0.477, alpha: 1)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -45,7 +45,7 @@ class CalendarCell: FSCalendarCell {
         super.init(frame: frame)
         
         // 원형 배경 및 회색 뷰를 셀에 추가
-        contentView.addSubview(grayView)
+        contentView.addSubview(emotionView)
         contentView.addSubview(circleBackgroundView)
         circleBackgroundView.addSubview(dayLabel)
         
@@ -69,25 +69,48 @@ class CalendarCell: FSCalendarCell {
         
         // 숫자 레이블 (원형 중앙)
         NSLayoutConstraint.activate([
-//            self.titleLabel.centerXAnchor.constraint(equalTo: circleBackgroundView.centerXAnchor),
-//            self.titleLabel.centerYAnchor.constraint(equalTo: circleBackgroundView.centerYAnchor)
-//            
             dayLabel.centerXAnchor.constraint(equalTo: circleBackgroundView.centerXAnchor),
             dayLabel.centerYAnchor.constraint(equalTo: circleBackgroundView.centerYAnchor)
         ])
         
         //회색 View 레이아웃 (하단부)
         NSLayoutConstraint.activate([
-            grayView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            grayView.topAnchor.constraint(equalTo: circleBackgroundView.bottomAnchor, constant: 4),
-            // 회색 뷰의 높이를 60%가 아니라, 원하는 크기로 설정 (예: contentView의 남은 공간)
-            grayView.widthAnchor.constraint(equalToConstant: 44),
-            grayView.heightAnchor.constraint(equalToConstant: 44)
+            emotionView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            emotionView.topAnchor.constraint(equalTo: circleBackgroundView.bottomAnchor, constant: 4),
+            emotionView.widthAnchor.constraint(equalToConstant: 44),
+            emotionView.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
     
     // 숫자 업데이트
     func configure(with day: String) {
         dayLabel.text = day
+    }
+    
+    // cell 재사용을 위한 초기화
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        dayLabel.layer.opacity = 1
+        circleBackgroundView.backgroundColor = .clear
+        dayLabel.textColor = UIColor(red: 0.564, green: 0.477, blue: 0.477, alpha: 1)
+    }
+    
+    func setCalendarCellDesign(monthPosition: FSCalendarMonthPosition, date: Date) {
+        // 일기 데이터가 있는 경우 그림으로 표기
+        
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+        
+        // 오늘인 경우 동그라미 표기, 일자 글씨 색 변경
+        if dateFormatter.string(from: date) == dateFormatter.string(from: Date()) {
+            circleBackgroundView.backgroundColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1)
+            dayLabel.textColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
+        }
+        
+        // 이번달 날짜가 아닌 경우 뿌옇게 표기
+        if monthPosition == .next || monthPosition == .previous {
+            dayLabel.layer.opacity = 0.5
+        }
     }
 }

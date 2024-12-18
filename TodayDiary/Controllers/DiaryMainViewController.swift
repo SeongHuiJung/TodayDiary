@@ -27,7 +27,13 @@ class DiaryMainViewController: UIViewController {
         // 커스텀 셀 등록 (CalendarCell 클래스는 밑에서 구현)
         calendarView.register(CalendarCell.self, forCellReuseIdentifier: "CalendarCell")
         
+        // 캘린더 기본 디자인 설정
         setCalendarDesign(calendarView: calendarView)
+        
+        view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
+        
+        //calendarView.adjustsBoundingRectWhenChangingMonths = true
+        //calendarView.placeholderType = .fillHeadTail
     }
     
     func fetchAllData() {
@@ -100,16 +106,16 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         cell.configure(with: "\(day)") // 셀에 날짜를 표시
         
         
+        cell.setCalendarCellDesign(monthPosition: position, date: date)
         
 //        if position == .current {
 //            let day = Calendar.current.component(.day, from: date)
-//            cell.configure(with: "\(day)") // 셀에 날짜를 표시
-//            
-//            cell.isHidden = false // 현재 월 날짜는 보이게 설정
+//            cell.configure(with: "\(day)")
+//            cell.isHidden = false // 현재 월의 날짜만 표시
 //        } else {
-//            // 이전 달 및 다음 달의 셀은 숨김
-//            cell.isHidden = true
+//            cell.isHidden = true // 이전/다음 달 날짜 숨김
 //        }
+
         return cell
     }
 
