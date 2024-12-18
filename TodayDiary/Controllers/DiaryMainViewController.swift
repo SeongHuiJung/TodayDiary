@@ -7,14 +7,29 @@
 
 import UIKit
 import CoreData
+import FSCalendar
 
 class DiaryMainViewController: UIViewController {
     
+    @IBOutlet weak var calendarView: FSCalendar!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+         
         fetchAllData()
+        
+        // 프로토콜 연결
+        calendarView.delegate = self
+        calendarView.dataSource = self
+        
+        calendarView.placeholderType = .fillSixRows
+        
+        // 커스텀 셀 등록 (CalendarCell 클래스는 밑에서 구현)
+        calendarView.register(CalendarCell.self, forCellReuseIdentifier: "CalendarCell")
+        
+        setCalendarDesign(calendarView: calendarView)
     }
+    
     func fetchAllData() {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Diary")
@@ -42,7 +57,6 @@ class DiaryMainViewController: UIViewController {
         }
     }
     
-    
     @IBAction func tappedAddDataBtn(_ sender: UIButton) {
         
         guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
@@ -67,5 +81,50 @@ class DiaryMainViewController: UIViewController {
         } catch {
             print("Error saving data: \(error)")
         }
+    }
+}
+
+extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
+    
+    // 오늘 이후의 날짜는 선택이 불가능
+    func maximumDate(for calendar: FSCalendar) -> Date {
+        return Date()
+    }
+    
+    // 커스텀 셀 로드
+    func calendar(_ calendar: FSCalendar, cellFor date: Date, at position: FSCalendarMonthPosition) -> FSCalendarCell {
+        guard let cell = calendar.dequeueReusableCell(withIdentifier: "CalendarCell", for: date, at: position) as? CalendarCell else {
+            return FSCalendarCell()
+        }
+        let day = Calendar.current.component(.day, from: date)
+        cell.configure(with: "\(day)") // 셀에 날짜를 표시
+        
+        
+        
+//        if position == .current {
+//            let day = Calendar.current.component(.day, from: date)
+//            cell.configure(with: "\(day)") // 셀에 날짜를 표시
+//            
+//            cell.isHidden = false // 현재 월 날짜는 보이게 설정
+//        } else {
+//            // 이전 달 및 다음 달의 셀은 숨김
+//            cell.isHidden = true
+//        }
+        return cell
+    }
+
+    
+    // 셀 클릭시
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        // 일기 작성 페이지로 이동
+        guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "WriteDiaryViewController") as? WriteDiaryViewController else { return }
+        secondVC.modalPresentationStyle = .fullScreen
+        
+        // 데이터 전달
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+        secondVC.dateString = dateFormatter.string(from: date)
+        
+        self.present(secondVC, animated: true, completion: nil)
     }
 }
