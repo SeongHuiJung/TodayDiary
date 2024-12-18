@@ -80,10 +80,39 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
 //            print("Token: \(identityToken!)")
 //            print("authorizationCode: \(authorizationCode!)")
             
-            // 메인 페이지로 이동
+            // MARK: -  로그인화면부터 navigator 넣기 -> 성공
+            // but 메인화면부터 바로 시작하면 안됨. 그래서 자동로그인 기능은 좀 고려해볼것
+//            guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
+//            secondVC.modalPresentationStyle = .fullScreen
+//            self.navigationController?.pushViewController(secondVC, animated: true)
+//            
+            
+            
+            
+            // MARK: - gpt
+            // 화면1 (로그인 화면)에서 화면2로 이동
+            //let storyboard = UIStoryboard(name: "Main", bundle: nil)
+
+            // 화면2의 NavigationController를 불러옵니다.
+//            guard let navigationController = storyboard.instantiateViewController(withIdentifier: "DiaryMainViewController") as? UINavigationController else {
+//                print("NavigationController를 찾을 수 없습니다.")
+//                return }
+//            
+//            print("NavigationController 로드 성공") // 여기가 출력되면 정상적으로 불러온 것
+//            // 화면2의 NavigationController를 Root로 하여 present 합니다.
+//            navigationController.modalPresentationStyle = .fullScreen
+//            self.present(navigationController, animated: true, completion: nil)
+            
+            
+            
+            
+            // MARK: - 기존 방법 메인 페이지로 이동
             guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
             secondVC.modalPresentationStyle = .fullScreen
             self.present(secondVC, animated: true, completion: nil)
+
+            
+            
             
             // 암호 기반 인증에 성공한 경우(iCloud), 사용자의 인증 정보를 확인하고 필요한 작업을 수행합니다
             //        case let passwordCredential as ASPasswordCredential:

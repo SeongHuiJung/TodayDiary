@@ -132,5 +132,8 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         secondVC.dateString = dateFormatter.string(from: date)
         
         self.present(secondVC, animated: true, completion: nil)
+
+        //MARK: - navigator
+        //self.navigationController?.pushViewController(secondVC, animated: true)
     }
 }

@@ -22,7 +22,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="87" y="-34"/>
+            <point key="canvasLocation" x="-85" y="-44"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="KOY-KT-wtf">
@@ -34,10 +34,11 @@
                         <viewLayoutGuide key="safeArea" id="Gsp-3n-ALD"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="nmc-ZH-SKi"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3x3-5Z-kYe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="790" y="-35"/>
+            <point key="canvasLocation" x="1653" y="-35"/>
         </scene>
         <!--Diary Main View Controller-->
         <scene sceneID="nmK-us-hhm">
@@ -73,13 +74,14 @@
                             <constraint firstItem="MdC-yX-Obn" firstAttribute="centerX" secondItem="a0F-pG-dzX" secondAttribute="centerX" id="z97-EF-hFy"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="cqZ-Hh-MGu"/>
                     <connections>
                         <outlet property="calendarView" destination="a0F-pG-dzX" id="Bbh-mQ-dFW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oyF-eD-IwH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1478.6259541984732" y="-35.211267605633807"/>
+            <point key="canvasLocation" x="2420.6106870229005" y="-35.211267605633807"/>
         </scene>
         <!--Write Diary View Controller-->
         <scene sceneID="whi-Ly-i0m">
@@ -148,7 +150,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3G8-hX-YPk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2182" y="-35"/>
+            <point key="canvasLocation" x="3124.4274809160306" y="-35.211267605633807"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="GsJ-u0-Rod">
@@ -163,7 +165,25 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YQt-R9-5Oe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2940" y="-35"/>
+            <point key="canvasLocation" x="3883.2061068702287" y="-35.211267605633807"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="qXF-qc-LkV">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="lFw-mQ-SAO" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="JsJ-oS-5FW">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Myy-yS-78t" kind="relationship" relationship="rootViewController" id="DzO-gY-1DX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nv6-SC-Lhq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="788.54961832061065" y="-35.211267605633807"/>
         </scene>
     </scenes>
     <resources>
