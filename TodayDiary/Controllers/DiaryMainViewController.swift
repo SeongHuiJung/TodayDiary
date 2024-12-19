@@ -127,9 +127,9 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         secondVC.modalPresentationStyle = .fullScreen
         
         // 데이터 전달
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
-        secondVC.dateString = dateFormatter.string(from: date)
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+        secondVC.date = date
         
         self.present(secondVC, animated: true, completion: nil)
 
