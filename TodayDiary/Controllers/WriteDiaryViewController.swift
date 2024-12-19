@@ -94,7 +94,7 @@ class WriteDiaryViewController: UIViewController {
         }
         
         // 애니메이션을 사용하여 원래 높이로 되돌리기
-        UIView.animate(withDuration: 10.0) {
+        UIView.animate(withDuration: 0.3) {
             self.textViewHeightConstraint = self.textView.heightAnchor.constraint(equalToConstant: self.originalTextViewHeight)
             self.textViewHeightConstraint?.isActive = true
             self.view.layoutIfNeeded() // 애니메이션 적용
