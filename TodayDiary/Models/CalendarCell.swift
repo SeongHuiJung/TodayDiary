@@ -40,6 +40,12 @@ class CalendarCell: FSCalendarCell {
         return label
     }()
     
+    var date: Date?
+    var emoji: Int?
+    var text: String?
+    var uuid: UUID?
+    
+    
     // 초기화
     override init!(frame: CGRect) {
         super.init(frame: frame)
@@ -93,17 +99,30 @@ class CalendarCell: FSCalendarCell {
         dayLabel.layer.opacity = 1
         circleBackgroundView.backgroundColor = .clear
         dayLabel.textColor = UIColor(red: 0.564, green: 0.477, blue: 0.477, alpha: 1)
+        emotionView.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
     }
     
-    func setCalendarCellDesign(monthPosition: FSCalendarMonthPosition, date: Date) {
+    // date, uuid -> 필수 데이터
+    // emoji, text -> 선택 데이터
+    func setCalendarCellData(date: Date, emoji: Int?, text: String?, uuid: UUID) {
         // 일기 데이터가 있는 경우 그림으로 표기
+        print("확인 date : \(date)")
+        print("확인 emoji : \(emoji ?? 999)")
+        print("확인 text : \(text ?? "데이터가 없습니다")")
+        print("확인 uuid : \(uuid)")
         
-        
+        if emoji == 1 {
+            emotionView.backgroundColor = .black
+        }
+    }
+    
+    func setCalendarCellDesign (monthPosition: FSCalendarMonthPosition, date: Date) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy년 MM월 dd일"
         
         // 오늘인 경우 동그라미 표기, 일자 글씨 색 변경
         if dateFormatter.string(from: date) == dateFormatter.string(from: Date()) {
+            print("동그라미 \(dateFormatter.string(from: date))")
             circleBackgroundView.backgroundColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1)
             dayLabel.textColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
         }

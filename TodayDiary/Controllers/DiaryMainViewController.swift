@@ -12,10 +12,11 @@ import FSCalendar
 class DiaryMainViewController: UIViewController {
     
     @IBOutlet weak var calendarView: FSCalendar!
+    var count = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         
+        
         fetchAllData()
         
         // 프로토콜 연결
@@ -63,6 +64,64 @@ class DiaryMainViewController: UIViewController {
         }
     }
     
+    func fetchData(dateData: Date) -> (Date?, Int?, String?, UUID?) {
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Diary")
+        
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "yyyy"
+        let year = Int(dateFormatter.string(from: dateData))!
+        
+        dateFormatter.dateFormat = "M"
+        let month = Int(dateFormatter.string(from: dateData))!
+        
+        dateFormatter.dateFormat = "d"
+        let day = Int(dateFormatter.string(from: dateData))!
+
+        var date : Date?
+        var emoji : Int?
+        var text : String?
+        var uuid: UUID?
+        
+        // Calendar와 DateComponents를 이용하여 12월 조건을 설정
+        let calendar = Calendar.current
+        let startComponents = DateComponents(year: year, month: month, day: day, hour: 0, minute: 0, second: 0) // 원하는 연도와 월의 시작일
+        let endComponents = DateComponents(year: year, month: month, day: day, hour: 23, minute: 59, second: 59) // 해당 월의 마지막일
+        
+        if let startDate = calendar.date(from: startComponents),
+           let endDate = calendar.date(from: endComponents) {
+            let predicate = NSPredicate(format: "date >= %@ AND date <= %@", startDate as NSDate, endDate as NSDate)
+            fetchRequest.predicate = predicate
+        }
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            print("n월 n일 데이터 불러오기 성공")
+            for result in results {
+                if let _date = result.value(forKey: "date") as? Date {
+                    print("Fetched date: \(_date)")
+                    date = _date
+                }
+                if let _emoji = result.value(forKey: "emoji") as? Int {
+                    print("Fetched emoji: \(_emoji)")
+                    emoji = _emoji
+                }
+                if let _text = result.value(forKey: "text") as? String {
+                    print("Fetched text: \(_text)")
+                    text = _text
+                }
+                if let _uuid = result.value(forKey: "uuid") as? UUID {
+                    print("Fetched uuid: \(_uuid)")
+                    uuid = _uuid
+                }
+            }
+        } catch {
+            print("Error fetching December data: \(error)")
+        }
+        return (date, emoji, text, uuid)
+    }
+    
     @IBAction func tappedAddDataBtn(_ sender: UIButton) {
         
         guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
@@ -105,20 +164,26 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         let day = Calendar.current.component(.day, from: date)
         cell.configure(with: "\(day)") // 셀에 날짜를 표시
         
+        // 해당 일에 맞는 데이터 로드
+        let data = fetchData(dateData: date)
+        
+        // 해당 일에 데이터가 있는 경우에만 데이터 set
+        if data.0 != nil {
+            cell.setCalendarCellData(date: data.0!, emoji: data.1, text: data.2, uuid: data.3!)
+        }
         
         cell.setCalendarCellDesign(monthPosition: position, date: date)
         
-//        if position == .current {
-//            let day = Calendar.current.component(.day, from: date)
-//            cell.configure(with: "\(day)")
-//            cell.isHidden = false // 현재 월의 날짜만 표시
-//        } else {
-//            cell.isHidden = true // 이전/다음 달 날짜 숨김
-//        }
-
+        //        if position == .current {
+        //            let day = Calendar.current.component(.day, from: date)
+        //            cell.configure(with: "\(day)")
+        //            cell.isHidden = false // 현재 월의 날짜만 표시
+        //        } else {
+        //            cell.isHidden = true // 이전/다음 달 날짜 숨김
+        //        }
         return cell
     }
-
+    
     
     // 셀 클릭시
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
@@ -127,12 +192,12 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         secondVC.modalPresentationStyle = .fullScreen
         
         // 데이터 전달
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+        //        let dateFormatter = DateFormatter()
+        //        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
         secondVC.date = date
         
         self.present(secondVC, animated: true, completion: nil)
-
+        
         //MARK: - navigator
         //self.navigationController?.pushViewController(secondVC, animated: true)
     }
