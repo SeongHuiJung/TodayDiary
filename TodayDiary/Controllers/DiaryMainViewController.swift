@@ -18,6 +18,7 @@ class DiaryMainViewController: UIViewController {
         super.viewDidLoad()
         
         fetchAllData()
+        calendarView.reloadData()
         
         // 프로토콜 연결
         calendarView.delegate = self

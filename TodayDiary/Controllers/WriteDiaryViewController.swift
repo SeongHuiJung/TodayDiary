@@ -15,6 +15,9 @@ class WriteDiaryViewController: UIViewController {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var dayLabel: UILabel!
     
+    private var buttonBottomConstraint: NSLayoutConstraint?
+    var bottomSheetViewController: BottomSheetViewController?
+    
     private let context: NSManagedObjectContext? = {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate? else {
             print("AppDelegate가 초기화되지 않았습니다.")
@@ -24,36 +27,40 @@ class WriteDiaryViewController: UIViewController {
         
     }()
     
+    // save 버튼 관련 변수
     private let saveBtn: UIButton = {
         let button = UIButton()
         button.setTitle("저장하기", for: .normal)
         button.backgroundColor = UIColor(red: 0.818, green: 0.59, blue: 0.59, alpha: 1)
         button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor(red: 0.514, green: 0.514, blue: 0.514, alpha: 1), for: .disabled)
+        
         button.layer.cornerRadius = 16
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(saveBtnTapped), for: .touchUpInside)
+        button.isEnabled = false
         return button
     }()
-    private var buttonBottomConstraint: NSLayoutConstraint?
     
-    var date: Date?
-    
-    var bottomSheetViewController: BottomSheetViewController?
+    var isSaveBtnEnabled: Bool = false {
+        didSet {
+            saveBtn.isEnabled = isSaveBtnEnabled
+            saveBtn.backgroundColor = isSaveBtnEnabled ? UIColor(red: 0.818, green: 0.59, blue: 0.59, alpha: 1) : UIColor(red: 0.837, green: 0.837, blue: 0.837, alpha: 1)
+        }
+    }
     
     /// data.0 : date
     /// data.1 : emoji
     /// data.2 : text
     /// data.4 : uuid
-    var data: (Date?, Int?, String?, UUID?)
+    var data: (Date?, Int?, String?, UUID?) // 로드한 데이터 (처음 생성시에는 데이터 없음)
+    var date: Date? // 로드한 데이터 (처음 생성시에는 데이터 없음)
     
     var selectedEmoji: Int?
     
     let textView = UITextView()
-    
     var maxTextCount = 200
-    
     var originalTextViewHeight: CGFloat = 0 // 텍스트 뷰의 원래 높이 저장
-    
     var textViewHeightConstraint: NSLayoutConstraint?
     
     override func viewDidLoad() {
@@ -65,6 +72,7 @@ class WriteDiaryViewController: UIViewController {
         setDate()
         setSaveBtn()
         setEmojiView()
+        checkSaveBtnIsActive()
         
         registerNotifications()
     }
@@ -73,17 +81,85 @@ class WriteDiaryViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func saveBtnTapped() {
-        if let uuid = data.3 { updateData(id: uuid) }
-        else { createData() }
-    }
-    
+    // MARK: - layout design func
     func setEmojiView() {
         moodImage.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(setEmojiTapped))
         moodImage.addGestureRecognizer(tapGesture)
     }
+    private func setSaveBtn() {
+        view.addSubview(saveBtn)
+        
+        buttonBottomConstraint = saveBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
+        
+        // 버튼 제약 조건 설정
+        
+        NSLayoutConstraint.activate([
+            saveBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 31),
+            saveBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -31),
+            saveBtn.heightAnchor.constraint(equalToConstant: 50),
+            buttonBottomConstraint!
+        ])
+    }
+    func registerNotifications() {
+        // 키보드 동작 관련
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // emoji cell 클릭 관련
+        NotificationCenter.default.addObserver(self, selector: #selector(getEmojiSelected(_:)), name: NSNotification.Name("ClickEmojiNoti"), object: nil)
+    }
+    func setUI() {
+        view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
+        dateLabel.textColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1)
+        dayLabel.textColor = UIColor(red: 0.74, green: 0.635, blue: 0.635, alpha: 1)
+        currentTextCntLabel.textColor = UIColor(red: 0.74, green: 0.635, blue: 0.635, alpha: 1)
+    }
     
+    // 이모지 무조건 선택해야 저장 버튼 활성화
+    // 버튼 활성화 가능 여부 확인 함수
+    func checkSaveBtnIsActive() {
+        if selectedEmoji != nil || data.1 != nil {
+            print("selectedEmoji \(selectedEmoji)")
+            print("data.1 \(data.1)")
+            isSaveBtnEnabled = true
+        }
+        else {
+            isSaveBtnEnabled = false
+        }
+    }
+    
+    
+    
+    // MARK: - data setting
+    func loadData() {
+        // 감정 이모지 그림 설정
+        moodImage.image = getEmoji(emoji: data.1 ?? 0)
+        // 일기 데이터 로드
+        textView.text = data.2 ?? ""
+    }
+    func setDate() {
+        guard let date = date else { return }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy년 M월 d일"
+        dateLabel.text = String(dateFormatter.string(from: date))
+        
+        dateFormatter.dateFormat = "E요일"
+        dateFormatter.locale = Locale(identifier:"ko_KR")
+        dayLabel.text = String(dateFormatter.string(from: date))
+    }
+    
+    
+    
+    // MARK: - tapped objc func
+    @IBAction func tappedBackBtn(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    @objc func saveBtnTapped() {
+        if let uuid = data.3 { updateData(id: uuid) }
+        else { createData() }
+    }
     @objc func setEmojiTapped() {
         let viewController = EmojiViewController()
         let height: CGFloat = 500
@@ -94,7 +170,6 @@ class WriteDiaryViewController: UIViewController {
         
         self.present(bottomSheetViewController!, animated: false, completion: nil)
     }
-    
     @objc func getEmojiSelected(_ notification: Notification) {
         // 이모지 선택시 이모지 bottom sheet 내림
         bottomSheetViewController!.hideBottomSheetAndGoBack()
@@ -102,8 +177,13 @@ class WriteDiaryViewController: UIViewController {
         moodImage.image = getEmoji(emoji:notification.object! as! Int)
         
         selectedEmoji = notification.object! as? Int
+        
+        checkSaveBtnIsActive()
     }
     
+    
+    
+    // MARK: - CLUD
     func updateData(id: UUID) {
         guard let context = context else { return }
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>.init(entityName: "Diary")
@@ -114,7 +194,14 @@ class WriteDiaryViewController: UIViewController {
         do {
             guard let result = try? context.fetch(fetchRequest),
                   let object = result.first as? NSManagedObject else { return }
-            object.setValue(selectedEmoji!, forKey: "emoji")
+            
+            if let selectedEmoji = selectedEmoji {
+                object.setValue(selectedEmoji, forKey: "emoji")
+            }
+            else {
+                object.setValue(data.1! , forKey: "emoji")
+            }
+            //object.setValue(selectedEmoji!, forKey: "emoji") // error!
             
             if textView.textColor == UIColor(red: 0.653, green: 0.653, blue: 0.653, alpha: 1) {
                 object.setValue("", forKey: "text")
@@ -127,7 +214,6 @@ class WriteDiaryViewController: UIViewController {
             print("error: \(error.localizedDescription)")
         }
     }
-    
     func createData() {
         guard let context = context else { return }
         guard let entityDescription = NSEntityDescription.entity(forEntityName: "Diary", in: context) else {
@@ -154,10 +240,10 @@ class WriteDiaryViewController: UIViewController {
             diary.setValue("", forKey: "text")
         }
         else {
-            diary.setValue(textView.text, forKey: "text")
+            diary.setValue(textView.text, forKey: "text") // error!
         }
         
-        diary.setValue(selectedEmoji!, forKey: "emoji")
+        diary.setValue(selectedEmoji!, forKey: "emoji") // error!
         diary.setValue(UUID(), forKey: "uuid")
         
         do {
@@ -168,31 +254,9 @@ class WriteDiaryViewController: UIViewController {
         }
     }
     
-    private func setSaveBtn() {
-        view.addSubview(saveBtn)
-        
-        buttonBottomConstraint = saveBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
-        
-        // 버튼 제약 조건 설정
-        
-        NSLayoutConstraint.activate([
-            saveBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 31),
-            saveBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -31),
-            saveBtn.heightAnchor.constraint(equalToConstant: 50),
-            buttonBottomConstraint!
-        ])
-    }
-    
-    func registerNotifications() {
-        // 키보드 동작 관련
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        // emoji cell 클릭 관련
-        NotificationCenter.default.addObserver(self, selector: #selector(getEmojiSelected(_:)), name: NSNotification.Name("ClickEmojiNoti"), object: nil)
-    }
     
     
+    // MARK: - keyboard
     // 키보드가 올라오면 호출되는 메서드에서 키보드가 textView와 겹치는 부분만큼만 크기를 줄입니다.
     @objc func keyboardWillShow(_ notification: NSNotification) {
         guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
@@ -237,7 +301,6 @@ class WriteDiaryViewController: UIViewController {
             }
         }
     }
-    
     @objc func keyboardWillHide(_ notification: Notification) {
         // 기존 높이 제약이 있다면 이를 비활성화하고 새 제약을 설정
         if let currentConstraint = self.textViewHeightConstraint {
@@ -258,36 +321,9 @@ class WriteDiaryViewController: UIViewController {
         }
     }
     
-    @IBAction func tappedBackBtn(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: nil)
-    }
     
-    func loadData() {
-        // 감정 이모지 그림 설정
-        moodImage.image = getEmoji(emoji: data.1 ?? 0)
-        // 일기 데이터 로드
-        textView.text = data.2 ?? ""
-    }
     
-    func setDate() {
-        guard let date = date else { return }
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy년 M월 d일"
-        dateLabel.text = String(dateFormatter.string(from: date))
-        
-        dateFormatter.dateFormat = "E요일"
-        dateFormatter.locale = Locale(identifier:"ko_KR")
-        dayLabel.text = String(dateFormatter.string(from: date))
-    }
-    
-    func setUI() {
-        view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
-        dateLabel.textColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1)
-        dayLabel.textColor = UIColor(red: 0.74, green: 0.635, blue: 0.635, alpha: 1)
-        currentTextCntLabel.textColor = UIColor(red: 0.74, green: 0.635, blue: 0.635, alpha: 1)
-    }
-    
+    // MARK: - textView 관련
     func TextViewSetting() {
         textView.backgroundColor = .white
         textView.isScrollEnabled = true
@@ -323,7 +359,6 @@ class WriteDiaryViewController: UIViewController {
         // padding
         textView.textContainerInset = UIEdgeInsets(top: 19, left: 19, bottom: 19, right: 19)
     }
-    
     func updateTextCount() {
         // 글자 수 표시
         if textView.textColor == UIColor(red: 0.653, green: 0.653, blue: 0.653, alpha: 1) {
