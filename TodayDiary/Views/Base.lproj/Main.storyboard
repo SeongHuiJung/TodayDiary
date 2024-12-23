@@ -118,18 +118,16 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="&gt;"/>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ljf-T2-qQW">
-                                <rect key="frame" x="12" y="66" width="83" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ljf-T2-qQW">
+                                <rect key="frame" x="24" y="75" width="38" height="38"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="뒤로가기"/>
+                                <buttonConfiguration key="configuration" style="plain" image="back"/>
                                 <connections>
                                     <action selector="tappedBackBtn:" destination="mkE-ff-Npc" eventType="touchUpInside" id="9s1-7L-LLE"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0 / 200" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uX4-4y-jKo">
-                                <rect key="frame" x="283" y="229" width="72" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 / 200" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uX4-4y-jKo">
+                                <rect key="frame" x="305.66666666666669" y="239" width="49.333333333333314" height="18"/>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="15"/>
                                 <color key="textColor" systemColor="viewFlipsideBackgroundColor"/>
                                 <nil key="highlightedColor"/>
@@ -138,6 +136,10 @@
                         <viewLayoutGuide key="safeArea" id="aKa-Nn-9oL"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="ljf-T2-qQW" firstAttribute="top" secondItem="aKa-Nn-9oL" secondAttribute="top" constant="16" id="0ij-Cp-8SS"/>
+                            <constraint firstItem="uX4-4y-jKo" firstAttribute="top" secondItem="ac9-ZU-cXQ" secondAttribute="bottom" constant="5" id="2dK-h7-mdk"/>
+                            <constraint firstItem="ljf-T2-qQW" firstAttribute="leading" secondItem="aKa-Nn-9oL" secondAttribute="leading" constant="24" id="7Aj-Tt-Ohc"/>
+                            <constraint firstItem="aKa-Nn-9oL" firstAttribute="trailing" secondItem="uX4-4y-jKo" secondAttribute="trailing" constant="38" id="Bb2-M1-SOw"/>
                             <constraint firstItem="kde-Oo-3sU" firstAttribute="top" secondItem="8pP-HP-7Ml" secondAttribute="bottom" constant="13" id="JGv-eW-gzZ"/>
                             <constraint firstItem="8pP-HP-7Ml" firstAttribute="top" secondItem="aKa-Nn-9oL" secondAttribute="top" constant="62" id="Jy4-9n-MBk"/>
                             <constraint firstItem="8pP-HP-7Ml" firstAttribute="leading" secondItem="aKa-Nn-9oL" secondAttribute="leading" constant="166" id="LfC-nu-KBY"/>
@@ -195,6 +197,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="back" width="13.666666984558105" height="23.333333969116211"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
