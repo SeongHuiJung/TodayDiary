@@ -33,8 +33,11 @@ class DiaryMainViewController: UIViewController {
         
         view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
         
-        //calendarView.adjustsBoundingRectWhenChangingMonths = true
-        //calendarView.placeholderType = .fillHeadTail
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // 데이터 변경 후 메인화면으로 돌아올 시 cell 업데이트
+        calendarView.reloadData()
     }
     
     func fetchAllData() {
@@ -97,7 +100,7 @@ class DiaryMainViewController: UIViewController {
         
         do {
             let results = try context.fetch(fetchRequest)
-            print("n월 n일 데이터 불러오기 성공")
+            print("\(month)월 \(day)일 데이터 불러오기 성공")
             for result in results {
                 if let _date = result.value(forKey: "date") as? Date {
                     print("Fetched date: \(_date)")
@@ -169,18 +172,11 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         
         // 해당 일에 데이터가 있는 경우에만 데이터 set
         if data.0 != nil {
-            cell.setCalendarCellData(date: data.0!, emoji: data.1, text: data.2, uuid: data.3!)
+            cell.setCalendarCellData(_date: data.0!, _emoji: data.1, _text: data.2, _uuid: data.3!)
         }
         
         cell.setCalendarCellDesign(monthPosition: position, date: date)
-        
-        //        if position == .current {
-        //            let day = Calendar.current.component(.day, from: date)
-        //            cell.configure(with: "\(day)")
-        //            cell.isHidden = false // 현재 월의 날짜만 표시
-        //        } else {
-        //            cell.isHidden = true // 이전/다음 달 날짜 숨김
-        //        }
+
         return cell
     }
     
@@ -192,13 +188,9 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         secondVC.modalPresentationStyle = .fullScreen
         
         // 데이터 전달
-        //        let dateFormatter = DateFormatter()
-        //        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
         secondVC.date = date
+        secondVC.data = fetchData(dateData: date)
         
         self.present(secondVC, animated: true, completion: nil)
-        
-        //MARK: - navigator
-        //self.navigationController?.pushViewController(secondVC, animated: true)
     }
 }

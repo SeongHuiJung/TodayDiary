@@ -13,12 +13,14 @@ import FSCalendar
 
 class CalendarCell: FSCalendarCell {
     
-    // 하단 회색 View 추가
-    private let emotionView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    // 이모지 이미지
+    private let emotionView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit // 이미지를 어떻게 표시할지 설정 (옵션)
+        //imageView.image = UIImage(named: "maple") // 필요시 이미지 설정
+        return imageView
     }()
     
     // 원형 배경
@@ -100,20 +102,23 @@ class CalendarCell: FSCalendarCell {
         circleBackgroundView.backgroundColor = .clear
         dayLabel.textColor = UIColor(red: 0.564, green: 0.477, blue: 0.477, alpha: 1)
         emotionView.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
+        emotionView.image = nil
     }
     
     // date, uuid -> 필수 데이터
     // emoji, text -> 선택 데이터
-    func setCalendarCellData(date: Date, emoji: Int?, text: String?, uuid: UUID) {
-        // 일기 데이터가 있는 경우 그림으로 표기
-        print("확인 date : \(date)")
-        print("확인 emoji : \(emoji ?? 999)")
-        print("확인 text : \(text ?? "데이터가 없습니다")")
-        print("확인 uuid : \(uuid)")
+    func setCalendarCellData(_date: Date, _emoji: Int?, _text: String?, _uuid: UUID) {
         
-        if emoji == 1 {
-            emotionView.backgroundColor = .black
-        }
+        // 데이터 저장
+        date = _date
+        emoji = _emoji
+        text = _text
+        uuid = _uuid
+        
+        // 일기 데이터가 있는 경우 그림으로 표기
+        // 전체 달력에서의 cell 이미지 변경
+        guard let emoji = emoji else {return}
+        emotionView.image = getEmoji(emoji: emoji)
     }
     
     func setCalendarCellDesign (monthPosition: FSCalendarMonthPosition, date: Date) {
