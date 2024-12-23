@@ -176,14 +176,7 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         }
         
         cell.setCalendarCellDesign(monthPosition: position, date: date)
-        
-        //        if position == .current {
-        //            let day = Calendar.current.component(.day, from: date)
-        //            cell.configure(with: "\(day)")
-        //            cell.isHidden = false // 현재 월의 날짜만 표시
-        //        } else {
-        //            cell.isHidden = true // 이전/다음 달 날짜 숨김
-        //        }
+
         return cell
     }
     
@@ -195,14 +188,9 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         secondVC.modalPresentationStyle = .fullScreen
         
         // 데이터 전달
-        //        let dateFormatter = DateFormatter()
-        //        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
         secondVC.date = date
         secondVC.data = fetchData(dateData: date)
         
         self.present(secondVC, animated: true, completion: nil)
-        
-        //MARK: - navigator
-        //self.navigationController?.pushViewController(secondVC, animated: true)
     }
 }

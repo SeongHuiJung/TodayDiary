@@ -13,6 +13,6 @@ func getEmoji(emoji: Int) -> UIImage? {
     case 1: return UIImage(named: "maple")!
     case 2: return UIImage(named: "maple")!
     default:
-        return nil
+        return UIImage(named: "emptyEmoji")
     }
 }

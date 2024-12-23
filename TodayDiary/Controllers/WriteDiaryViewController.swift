@@ -217,7 +217,9 @@ class WriteDiaryViewController: UIViewController {
     }
     
     func loadData() {
+        // 감정 이모지 그림 설정
         moodImage.image = getEmoji(emoji: data.1 ?? 0)
+        // 일기 데이터 로드
         textView.text = data.2 ?? ""
     }
     

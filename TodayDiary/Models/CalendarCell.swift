@@ -108,11 +108,6 @@ class CalendarCell: FSCalendarCell {
     // date, uuid -> 필수 데이터
     // emoji, text -> 선택 데이터
     func setCalendarCellData(_date: Date, _emoji: Int?, _text: String?, _uuid: UUID) {
-        // 일기 데이터가 있는 경우 그림으로 표기
-//        print("확인 date : \(date)")
-//        print("확인 emoji : \(emoji ?? 999)")
-//        print("확인 text : \(text ?? "데이터가 없습니다")")
-//        print("확인 uuid : \(uuid)")
         
         // 데이터 저장
         date = _date
@@ -120,10 +115,10 @@ class CalendarCell: FSCalendarCell {
         text = _text
         uuid = _uuid
         
-        if emoji == 1 {
-            emotionView.backgroundColor = .black
-            emotionView.image = UIImage(named: "maple")
-        }
+        // 일기 데이터가 있는 경우 그림으로 표기
+        // 전체 달력에서의 cell 이미지 변경
+        guard let emoji = emoji else {return}
+        emotionView.image = getEmoji(emoji: emoji)
     }
     
     func setCalendarCellDesign (monthPosition: FSCalendarMonthPosition, date: Date) {
