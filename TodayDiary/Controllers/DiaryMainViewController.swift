@@ -124,32 +124,6 @@ class DiaryMainViewController: UIViewController {
         }
         return (date, emoji, text, uuid)
     }
-    
-    @IBAction func tappedAddDataBtn(_ sender: UIButton) {
-        
-        guard let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {
-            print("Error: Managed Object Context is nil")
-            return
-        }
-        
-        guard let entityDescription = NSEntityDescription.entity(forEntityName: "Diary", in: context) else {
-            print("Error: Entity 'Diary' not found in the model")
-            return
-        }
-        
-        let diary = NSManagedObject(entity: entityDescription, insertInto: context)
-        diary.setValue(Date(), forKey: "date")
-        diary.setValue(1, forKey: "emoji")
-        diary.setValue("시뮬레이터 데이터 추가!", forKey: "text")
-        diary.setValue(UUID(), forKey: "uuid")
-        
-        do {
-            try context.save()
-            print("Data saved successfully!")
-        } catch {
-            print("Error saving data: \(error)")
-        }
-    }
 }
 
 extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {

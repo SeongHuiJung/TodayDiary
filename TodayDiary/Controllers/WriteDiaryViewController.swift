@@ -21,7 +21,7 @@ class WriteDiaryViewController: UIViewController {
             return nil
         }
         return appDelegate?.persistentContainer.viewContext
-
+        
     }()
     
     private let saveBtn: UIButton = {
@@ -38,11 +38,15 @@ class WriteDiaryViewController: UIViewController {
     
     var date: Date?
     
+    var bottomSheetViewController: BottomSheetViewController?
+    
     /// data.0 : date
     /// data.1 : emoji
     /// data.2 : text
     /// data.4 : uuid
     var data: (Date?, Int?, String?, UUID?)
+    
+    var selectedEmoji: Int?
     
     let textView = UITextView()
     
@@ -60,8 +64,9 @@ class WriteDiaryViewController: UIViewController {
         TextViewSetting()
         setDate()
         setSaveBtn()
+        setEmojiView()
         
-        registerKeyboardNotifications()
+        registerNotifications()
     }
     
     deinit {
@@ -71,6 +76,32 @@ class WriteDiaryViewController: UIViewController {
     @objc func saveBtnTapped() {
         if let uuid = data.3 { updateData(id: uuid) }
         else { createData() }
+    }
+    
+    func setEmojiView() {
+        moodImage.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(setEmojiTapped))
+        moodImage.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func setEmojiTapped() {
+        let viewController = EmojiViewController()
+        let height: CGFloat = 500
+        bottomSheetViewController = BottomSheetViewController(contentViewController: viewController,
+                                                                  defaultHeight: height,
+                                                                  cornerRadius: 25,
+                                                                  isPannedable: true)
+        
+        self.present(bottomSheetViewController!, animated: false, completion: nil)
+    }
+    
+    @objc func getEmojiSelected(_ notification: Notification) {
+        // 이모지 선택시 이모지 bottom sheet 내림
+        bottomSheetViewController!.hideBottomSheetAndGoBack()
+        // 선택한 이모지로 변경
+        moodImage.image = getEmoji(emoji:notification.object! as! Int)
+        
+        selectedEmoji = notification.object! as? Int
     }
     
     func updateData(id: UUID) {
@@ -83,13 +114,18 @@ class WriteDiaryViewController: UIViewController {
         do {
             guard let result = try? context.fetch(fetchRequest),
                   let object = result.first as? NSManagedObject else { return }
-            object.setValue(1, forKey: "emoji")
-            object.setValue(textView.text, forKey: "text")
+            object.setValue(selectedEmoji!, forKey: "emoji")
+            
+            if textView.textColor == UIColor(red: 0.653, green: 0.653, blue: 0.653, alpha: 1) {
+                object.setValue("", forKey: "text")
+            }
+            else {
+                object.setValue(textView.text, forKey: "text")
+            }
             try context.save()
         } catch {
             print("error: \(error.localizedDescription)")
         }
-        print("수정성공")
     }
     
     func createData() {
@@ -104,18 +140,24 @@ class WriteDiaryViewController: UIViewController {
         formatter.locale = Locale(identifier: "ko_KR") // 한국어 로케일
         formatter.timeZone = TimeZone(identifier: "Asia/Seoul") // 한국 시간대
         formatter.dateFormat = "yyyy년 MM월 dd일 HH:mm:ss"
-
+        
         // 문자열에 시간 추가 (자정 기준)
         let dateLabelWithTime = "\(dateLabel.text!) 00:00:00"
         
         // 문자열을 Date로 변환
         let koreaDate = formatter.date(from: dateLabelWithTime)
-        print("한국 시간 기준 Date 객체: \(koreaDate)")
-      
+        
         let diary = NSManagedObject(entity: entityDescription, insertInto: context)
         diary.setValue(koreaDate, forKey: "date")
-        diary.setValue(1, forKey: "emoji")
-        diary.setValue(textView.text, forKey: "text")
+        
+        if textView.textColor == UIColor(red: 0.653, green: 0.653, blue: 0.653, alpha: 1) {
+            diary.setValue("", forKey: "text")
+        }
+        else {
+            diary.setValue(textView.text, forKey: "text")
+        }
+        
+        diary.setValue(selectedEmoji!, forKey: "emoji")
         diary.setValue(UUID(), forKey: "uuid")
         
         do {
@@ -141,9 +183,13 @@ class WriteDiaryViewController: UIViewController {
         ])
     }
     
-    func registerKeyboardNotifications() {
+    func registerNotifications() {
+        // 키보드 동작 관련
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // emoji cell 클릭 관련
+        NotificationCenter.default.addObserver(self, selector: #selector(getEmojiSelected(_:)), name: NSNotification.Name("ClickEmojiNoti"), object: nil)
     }
     
     

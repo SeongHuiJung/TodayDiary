@@ -48,14 +48,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MdC-yX-Obn">
-                                <rect key="frame" x="151" y="783" width="91" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="add data"/>
-                                <connections>
-                                    <action selector="tappedAddDataBtn:" destination="b0x-Z1-3xc" eventType="touchUpInside" id="I2n-uT-tzy"/>
-                                </connections>
-                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a0F-pG-dzX" customClass="FSCalendar">
                                 <rect key="frame" x="19" y="139" width="355" height="550"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -68,10 +60,8 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="a0F-pG-dzX" firstAttribute="leading" secondItem="F4t-98-f3D" secondAttribute="leading" constant="19" id="Dnm-wG-eEG"/>
-                            <constraint firstItem="MdC-yX-Obn" firstAttribute="bottom" secondItem="F4t-98-f3D" secondAttribute="bottom" id="Lui-vX-CGS"/>
                             <constraint firstItem="F4t-98-f3D" firstAttribute="trailing" secondItem="a0F-pG-dzX" secondAttribute="trailing" constant="19" id="S16-8J-9a8"/>
                             <constraint firstItem="a0F-pG-dzX" firstAttribute="top" secondItem="F4t-98-f3D" secondAttribute="top" constant="80" id="jzQ-hc-KJw"/>
-                            <constraint firstItem="MdC-yX-Obn" firstAttribute="centerX" secondItem="a0F-pG-dzX" secondAttribute="centerX" id="z97-EF-hFy"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="cqZ-Hh-MGu"/>
@@ -162,10 +152,10 @@
             </objects>
             <point key="canvasLocation" x="3154.9618320610684" y="-65.492957746478879"/>
         </scene>
-        <!--View Controller-->
+        <!--Emoji View Controller-->
         <scene sceneID="GsJ-u0-Rod">
             <objects>
-                <viewController id="YzJ-vf-dIH" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EmojiViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YzJ-vf-dIH" customClass="EmojiViewController" customModule="TodayDiary" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hG3-q7-Ugc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -175,7 +165,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YQt-R9-5Oe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3883.2061068702287" y="-35.211267605633807"/>
+            <point key="canvasLocation" x="3880" y="-65"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="qXF-qc-LkV">

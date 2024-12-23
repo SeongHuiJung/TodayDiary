@@ -11,7 +11,7 @@ import UIKit
 func getEmoji(emoji: Int) -> UIImage? {
     switch emoji {
     case 1: return UIImage(named: "maple")!
-    case 2: return UIImage(named: "maple")!
+    case 2: return UIImage(named: "back")!
     default:
         return UIImage(named: "emptyEmoji")
     }
