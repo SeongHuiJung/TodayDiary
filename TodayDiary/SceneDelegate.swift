@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AuthenticationServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -17,6 +18,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
+        
+        
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+            
+            let window = UIWindow(windowScene: windowScene)
+            self.window = window
+
+            // 초기 루트 뷰 컨트롤러를 로딩 화면으로 설정
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loadingVC = storyboard.instantiateViewController(withIdentifier: "LoadingViewController")
+            window.rootViewController = loadingVC
+            window.makeKeyAndVisible()
+
+            // 로그인 상태를 확인
+            checkAppleSignInState()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -50,6 +66,38 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-
+    func checkAppleSignInState() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        
+        if let userID = UserDefaults.standard.string(forKey: "AppleUserID") {
+            appleIDProvider.getCredentialState(forUserID: userID) { (credentialState, error) in
+                DispatchQueue.main.async {
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    
+                    switch credentialState {
+                    case .authorized:
+                        print("Apple ID is authorized.")
+                        // DiaryMainViewController로 전환
+                        guard let diaryMainVC = storyboard.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
+                        self.window?.rootViewController = diaryMainVC
+                    case .revoked, .notFound:
+                        print("Apple ID not found or revoked.")
+                        // 로그인 화면으로 전환
+                        guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+                        self.window?.rootViewController = loginVC
+                    default:
+                        break
+                    }
+                }
+            }
+        } else {
+            // Apple ID가 저장되지 않았을 경우, 로그인 화면으로 전환
+            DispatchQueue.main.async {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+                self.window?.rootViewController = loginVC
+            }
+        }
+    }
 }
 

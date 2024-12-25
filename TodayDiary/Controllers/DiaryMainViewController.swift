@@ -16,14 +16,13 @@ class DiaryMainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         fetchAllData()
-        calendarView.reloadData()
         
         // 프로토콜 연결
         calendarView.delegate = self
         calendarView.dataSource = self
         
+        calendarView.reloadData()
         calendarView.placeholderType = .fillSixRows
         
         // 커스텀 셀 등록 (CalendarCell 클래스는 밑에서 구현)
@@ -151,7 +150,6 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         }
         
         cell.setCalendarCellDesign(monthPosition: position, date: date)
-
         return cell
     }
     

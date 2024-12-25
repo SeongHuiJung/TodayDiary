@@ -75,6 +75,8 @@ class WriteDiaryViewController: UIViewController {
         checkSaveBtnIsActive()
         
         registerNotifications()
+        
+        //dateLabel.font = UIFont(name: "Ownglyph_meetme-Rg", size: 20)!
     }
     
     deinit {
