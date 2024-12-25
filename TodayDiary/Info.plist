@@ -21,6 +21,13 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>온글잎 밑미.ttf</string>
+		<string>Ownglyph meetme.ttf</string>
+		<string>Ownglyph_meetme-Rg.ttf</string>
+		<string>온글잎 밑미.ttf</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

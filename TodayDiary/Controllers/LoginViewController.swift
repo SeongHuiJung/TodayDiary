@@ -51,6 +51,16 @@ class LoginViewController: UIViewController {
         controller.performRequests()
     }
     
+    func performAppleLogin() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email] // 요청할 권한 지정 (필요 시)
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+    }
 }
 
 extension LoginViewController: ASAuthorizationControllerDelegate,
@@ -65,7 +75,17 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
         switch authorization.credential {
         case let appleIdCredential as ASAuthorizationAppleIDCredential:
             // 매번 인증시 얻을 수 있는 정보
-            //let userIdentifier = appleIdCredential.user
+            let userID = appleIdCredential.user
+            
+            // UserDefaults에 저장
+            UserDefaults.standard.set(userID, forKey: "AppleUserID")
+            print("Apple User ID 저장됨: \(userID)")
+            
+            // MARK: - 기존 방법 메인 페이지로 이동
+            guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
+            secondVC.modalPresentationStyle = .fullScreen
+            self.present(secondVC, animated: true, completion: nil)
+
             
             // 첫 로그인시에만 얻을 수 있는 정보
 //            let fullName = appleIdCredential.fullName
@@ -77,7 +97,12 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
 //            print("사용자 ID: \(userIdentifier)")
 //            print("전체 이름: \(fullName?.givenName ?? "이미 로그인했음") \(fullName?.familyName ?? "")")
 //            print("이메일: \(email ?? "이미 로그인했음")")
+            
+            //identityToken :  사용자에 대한 정보를 앱에 안전하게 전달하는 JWT.
 //            print("Token: \(identityToken!)")
+            
+            // authorizationCode : 앱이 서버와 상호 작용하는 데 사용하는 토큰.
+            // 5분간 유효, 1번만 사용 가능
 //            print("authorizationCode: \(authorizationCode!)")
             
             // MARK: -  로그인화면부터 navigator 넣기 -> 성공
@@ -102,17 +127,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
 //            // 화면2의 NavigationController를 Root로 하여 present 합니다.
 //            navigationController.modalPresentationStyle = .fullScreen
 //            self.present(navigationController, animated: true, completion: nil)
-            
-            
-            
-            
-            // MARK: - 기존 방법 메인 페이지로 이동
-            guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
-            secondVC.modalPresentationStyle = .fullScreen
-            self.present(secondVC, animated: true, completion: nil)
 
-            
-            
             
             // 암호 기반 인증에 성공한 경우(iCloud), 사용자의 인증 정보를 확인하고 필요한 작업을 수행합니다
             //        case let passwordCredential as ASPasswordCredential:
