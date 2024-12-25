@@ -1,24 +1,216 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="J9n-xI-ge1">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="TodayDiary" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-85" y="-44"/>
+        </scene>
+        <!--Login View Controller-->
+        <scene sceneID="KOY-KT-wtf">
+            <objects>
+                <viewController storyboardIdentifier="LoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Myy-yS-78t" customClass="LoginViewController" customModule="TodayDiary" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="GH4-AU-7p5">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="Gsp-3n-ALD"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="nmc-ZH-SKi"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3x3-5Z-kYe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1653" y="-35"/>
+        </scene>
+        <!--Diary Main View Controller-->
+        <scene sceneID="nmK-us-hhm">
+            <objects>
+                <viewController storyboardIdentifier="DiaryMainViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="b0x-Z1-3xc" customClass="DiaryMainViewController" customModule="TodayDiary" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="RG8-WH-1TK">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a0F-pG-dzX" customClass="FSCalendar">
+                                <rect key="frame" x="19" y="139" width="355" height="550"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="550" id="baj-dX-KNA"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="F4t-98-f3D"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="a0F-pG-dzX" firstAttribute="leading" secondItem="F4t-98-f3D" secondAttribute="leading" constant="19" id="Dnm-wG-eEG"/>
+                            <constraint firstItem="F4t-98-f3D" firstAttribute="trailing" secondItem="a0F-pG-dzX" secondAttribute="trailing" constant="19" id="S16-8J-9a8"/>
+                            <constraint firstItem="a0F-pG-dzX" firstAttribute="top" secondItem="F4t-98-f3D" secondAttribute="top" constant="80" id="jzQ-hc-KJw"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="cqZ-Hh-MGu"/>
+                    <connections>
+                        <outlet property="calendarView" destination="a0F-pG-dzX" id="Bbh-mQ-dFW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oyF-eD-IwH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2420.6106870229005" y="-35.211267605633807"/>
+        </scene>
+        <!--Write Diary View Controller-->
+        <scene sceneID="whi-Ly-i0m">
+            <objects>
+                <viewController storyboardIdentifier="WriteDiaryViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mkE-ff-Npc" customClass="WriteDiaryViewController" customModule="TodayDiary" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="99A-Z4-okW">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8pP-HP-7Ml">
+                                <rect key="frame" x="166" y="121" width="61" height="61"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="61" id="1xx-GG-diz"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kde-Oo-3sU">
+                                <rect key="frame" x="179.66666666666666" y="195" width="34" height="20"/>
+                                <fontDescription key="fontDescription" name="AppleSDGothicNeo-Bold" family="Apple SD Gothic Neo" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="day" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ac9-ZU-cXQ">
+                                <rect key="frame" x="184.33333333333334" y="216" width="24.333333333333343" height="18"/>
+                                <fontDescription key="fontDescription" name="AppleSDGothicNeo-Bold" family="Apple SD Gothic Neo" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QfC-4y-Ntc">
+                                <rect key="frame" x="224.66666666666666" y="201" width="7.3333333333333428" height="12.666666666666657"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="7.3600000000000003" id="Jfp-WF-10k"/>
+                                    <constraint firstAttribute="height" constant="12.73" id="pOF-bR-Ldz"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="&gt;"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ljf-T2-qQW">
+                                <rect key="frame" x="24" y="75" width="38" height="38"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="back"/>
+                                <connections>
+                                    <action selector="tappedBackBtn:" destination="mkE-ff-Npc" eventType="touchUpInside" id="9s1-7L-LLE"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 / 200" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uX4-4y-jKo">
+                                <rect key="frame" x="305.66666666666669" y="239" width="49.333333333333314" height="18"/>
+                                <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="15"/>
+                                <color key="textColor" systemColor="viewFlipsideBackgroundColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="aKa-Nn-9oL"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ljf-T2-qQW" firstAttribute="top" secondItem="aKa-Nn-9oL" secondAttribute="top" constant="16" id="0ij-Cp-8SS"/>
+                            <constraint firstItem="uX4-4y-jKo" firstAttribute="top" secondItem="ac9-ZU-cXQ" secondAttribute="bottom" constant="5" id="2dK-h7-mdk"/>
+                            <constraint firstItem="ljf-T2-qQW" firstAttribute="leading" secondItem="aKa-Nn-9oL" secondAttribute="leading" constant="24" id="7Aj-Tt-Ohc"/>
+                            <constraint firstItem="aKa-Nn-9oL" firstAttribute="trailing" secondItem="uX4-4y-jKo" secondAttribute="trailing" constant="38" id="Bb2-M1-SOw"/>
+                            <constraint firstItem="kde-Oo-3sU" firstAttribute="top" secondItem="8pP-HP-7Ml" secondAttribute="bottom" constant="13" id="JGv-eW-gzZ"/>
+                            <constraint firstItem="8pP-HP-7Ml" firstAttribute="top" secondItem="aKa-Nn-9oL" secondAttribute="top" constant="62" id="Jy4-9n-MBk"/>
+                            <constraint firstItem="8pP-HP-7Ml" firstAttribute="leading" secondItem="aKa-Nn-9oL" secondAttribute="leading" constant="166" id="LfC-nu-KBY"/>
+                            <constraint firstItem="aKa-Nn-9oL" firstAttribute="trailing" secondItem="8pP-HP-7Ml" secondAttribute="trailing" constant="166" id="Ri0-xD-nr7"/>
+                            <constraint firstItem="kde-Oo-3sU" firstAttribute="centerX" secondItem="99A-Z4-okW" secondAttribute="centerX" id="iAp-sK-tVE"/>
+                            <constraint firstItem="ac9-ZU-cXQ" firstAttribute="centerX" secondItem="99A-Z4-okW" secondAttribute="centerX" id="nlD-Uu-we2"/>
+                            <constraint firstItem="QfC-4y-Ntc" firstAttribute="top" secondItem="aKa-Nn-9oL" secondAttribute="top" constant="142" id="odS-ji-yXg"/>
+                            <constraint firstItem="ac9-ZU-cXQ" firstAttribute="top" secondItem="kde-Oo-3sU" secondAttribute="bottom" constant="1" id="snk-LU-U1u"/>
+                            <constraint firstItem="QfC-4y-Ntc" firstAttribute="leading" secondItem="kde-Oo-3sU" secondAttribute="trailing" constant="11" id="zm4-G7-MsP"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="currentTextCntLabel" destination="uX4-4y-jKo" id="vJ9-BF-KEZ"/>
+                        <outlet property="dateLabel" destination="kde-Oo-3sU" id="sBj-cN-tcS"/>
+                        <outlet property="dayLabel" destination="ac9-ZU-cXQ" id="43s-Go-H8O"/>
+                        <outlet property="moodImage" destination="8pP-HP-7Ml" id="KsE-4e-Dxt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3G8-hX-YPk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3154.9618320610684" y="-65.492957746478879"/>
+        </scene>
+        <!--Emoji View Controller-->
+        <scene sceneID="GsJ-u0-Rod">
+            <objects>
+                <viewController storyboardIdentifier="EmojiViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YzJ-vf-dIH" customClass="EmojiViewController" customModule="TodayDiary" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="hG3-q7-Ugc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="H8c-8h-JJT"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YQt-R9-5Oe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3880" y="-65"/>
+        </scene>
+        <!--Loading View Controller-->
+        <scene sceneID="5qa-ni-57S">
+            <objects>
+                <viewController storyboardIdentifier="LoadingViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="J9n-xI-ge1" customClass="LoadingViewController" customModule="TodayDiary" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9U8-vU-1i8">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="titleText" translatesAutoresizingMaskIntoConstraints="NO" id="oSy-Ve-mUY">
+                                <rect key="frame" x="132" y="354" width="129" height="29.666666666666686"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="smile" translatesAutoresizingMaskIntoConstraints="NO" id="8ta-pI-7Fi">
+                                <rect key="frame" x="145" y="403.66666666666669" width="103" height="103"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="103" id="SiG-JM-2fc"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="GRG-Qj-jzV"/>
+                        <color key="backgroundColor" red="0.99607843159999998" green="0.97254902119999997" blue="0.96078431610000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="GRG-Qj-jzV" firstAttribute="trailing" secondItem="8ta-pI-7Fi" secondAttribute="trailing" constant="145" id="FxA-0N-hW9"/>
+                            <constraint firstItem="8ta-pI-7Fi" firstAttribute="leading" secondItem="GRG-Qj-jzV" secondAttribute="leading" constant="145" id="GQf-on-JvS"/>
+                            <constraint firstItem="oSy-Ve-mUY" firstAttribute="leading" secondItem="GRG-Qj-jzV" secondAttribute="leading" constant="132" id="IB6-ze-gyw"/>
+                            <constraint firstItem="GRG-Qj-jzV" firstAttribute="trailing" secondItem="oSy-Ve-mUY" secondAttribute="trailing" constant="132" id="LPH-Ah-HtH"/>
+                            <constraint firstItem="8ta-pI-7Fi" firstAttribute="top" secondItem="oSy-Ve-mUY" secondAttribute="bottom" constant="20" id="RBj-47-Qtg"/>
+                            <constraint firstItem="oSy-Ve-mUY" firstAttribute="top" secondItem="GRG-Qj-jzV" secondAttribute="top" constant="295" id="Y5q-ia-5tr"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XVu-w9-cNb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="801" y="-35"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="back" width="13.666666984558105" height="23.333333969116211"/>
+        <image name="smile" width="341.33334350585938" height="341.33334350585938"/>
+        <image name="titleText" width="126.33333587646484" height="29.666666030883789"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="viewFlipsideBackgroundColor">
+            <color red="0.12156862745098039" green="0.12941176470588237" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>
