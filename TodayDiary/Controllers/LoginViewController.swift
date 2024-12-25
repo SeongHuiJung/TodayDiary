@@ -97,7 +97,12 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
 //            print("사용자 ID: \(userIdentifier)")
 //            print("전체 이름: \(fullName?.givenName ?? "이미 로그인했음") \(fullName?.familyName ?? "")")
 //            print("이메일: \(email ?? "이미 로그인했음")")
+            
+            //identityToken :  사용자에 대한 정보를 앱에 안전하게 전달하는 JWT.
 //            print("Token: \(identityToken!)")
+            
+            // authorizationCode : 앱이 서버와 상호 작용하는 데 사용하는 토큰.
+            // 5분간 유효, 1번만 사용 가능
 //            print("authorizationCode: \(authorizationCode!)")
             
             // MARK: -  로그인화면부터 navigator 넣기 -> 성공
