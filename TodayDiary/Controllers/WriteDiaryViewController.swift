@@ -52,7 +52,7 @@ class WriteDiaryViewController: UIViewController {
     /// data.0 : date
     /// data.1 : emoji
     /// data.2 : text
-    /// data.4 : uuid
+    /// data.3 : uuid
     var data: (Date?, Int?, String?, UUID?) // 로드한 데이터 (처음 생성시에는 데이터 없음)
     var date: Date? // 로드한 데이터 (처음 생성시에는 데이터 없음)
     
@@ -73,6 +73,7 @@ class WriteDiaryViewController: UIViewController {
         setSaveBtn()
         setEmojiView()
         checkSaveBtnIsActive()
+        setMeatball()
         
         registerNotifications()
         
@@ -131,12 +132,32 @@ class WriteDiaryViewController: UIViewController {
         }
     }
     
+    func setMeatball() {
+        
+        // 삭제할 데이터가 있는 경우에만 삭제 버튼 표기
+        guard data.3 != nil else { return }
+        print("삭제버튼?")
+        let meetball = UIButton()
+        meetball.setImage(UIImage(named: "meatball"), for: .normal)
+        meetball.frame = CGRect(x: 0, y: 0, width: 20, height: 4)
+        //meetball.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        view.addSubview(meetball)
+        meetball.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            meetball.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
+            meetball.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -17),
+            meetball.widthAnchor.constraint(equalToConstant: 35),
+            meetball.heightAnchor.constraint(equalToConstant: 35)
+        ])
+        
+        meetball.addTarget(self, action: #selector(deleteDataBtnTapped), for: .touchUpInside)
+    }
     
     
     // MARK: - data setting
     func loadData() {
         // 감정 이모지 그림 설정
-        moodImage.image = getEmoji(emoji: data.1 ?? 0)
+        moodImage.image = getEmoji(emojiNumber: data.1 ?? 0)
         // 일기 데이터 로드
         textView.text = data.2 ?? ""
     }
@@ -151,7 +172,7 @@ class WriteDiaryViewController: UIViewController {
         dateFormatter.locale = Locale(identifier:"ko_KR")
         dayLabel.text = String(dateFormatter.string(from: date))
     }
-    
+
     
     
     // MARK: - tapped objc func
@@ -168,6 +189,7 @@ class WriteDiaryViewController: UIViewController {
         bottomSheetViewController = BottomSheetViewController(contentViewController: viewController,
                                                                   defaultHeight: height,
                                                                   cornerRadius: 25,
+                                                              dimmedAlpha: 0.7,
                                                                   isPannedable: true)
         
         self.present(bottomSheetViewController!, animated: false, completion: nil)
@@ -176,22 +198,35 @@ class WriteDiaryViewController: UIViewController {
         // 이모지 선택시 이모지 bottom sheet 내림
         bottomSheetViewController!.hideBottomSheetAndGoBack()
         // 선택한 이모지로 변경
-        moodImage.image = getEmoji(emoji:notification.object! as! Int)
+        moodImage.image = getEmoji(emojiNumber:notification.object! as! Int)
         
         selectedEmoji = notification.object! as? Int
         
         checkSaveBtnIsActive()
     }
-    
+    @objc func deleteDataBtnTapped() {
+        print("click")
+        guard let id = data.3 else { return }
+        //deleteData(id: id)
+        
+        let viewController = DeleteDiaryViewController()
+        viewController.setUUID(uuid: id)
+        let height: CGFloat = 137
+        bottomSheetViewController = BottomSheetViewController(contentViewController: viewController,
+                                                                  defaultHeight: height,
+                                                                  cornerRadius: 16,
+                                                              dimmedAlpha: 0.9,
+                                                                  isPannedable: false)
+        
+        self.present(bottomSheetViewController!, animated: false, completion: nil)
+    }
     
     
     // MARK: - CLUD
     func updateData(id: UUID) {
         guard let context = context else { return }
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>.init(entityName: "Diary")
-        //        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Plan")
         fetchRequest.predicate = NSPredicate(format: "uuid = %@", id.uuidString)
-        //        fetchRequest.predicate = NSPredicate(format: "uuid = %@", id as CVarArg)
         
         do {
             guard let result = try? context.fetch(fetchRequest),
@@ -215,6 +250,7 @@ class WriteDiaryViewController: UIViewController {
         } catch {
             print("error: \(error.localizedDescription)")
         }
+        showToast(view: view, "저장에 성공했어요 :)", withDuration: 2.0, delay: 1.5)
     }
     func createData() {
         guard let context = context else { return }
@@ -246,7 +282,12 @@ class WriteDiaryViewController: UIViewController {
         }
         
         diary.setValue(selectedEmoji!, forKey: "emoji") // error!
-        diary.setValue(UUID(), forKey: "uuid")
+        let uuid = UUID()
+        diary.setValue(uuid, forKey: "uuid")
+        
+        // 새로운 데이터 생성후, 그 페이지에서 바로 데이터를 또 저장할 경우
+        // 새로운 데이터를 다시 생성하지 않고 수정으로 로드하기 위해 uuid 설정
+        data.3 = uuid
         
         do {
             try context.save()
@@ -254,8 +295,24 @@ class WriteDiaryViewController: UIViewController {
         } catch {
             print("Error saving data: \(error)")
         }
+        
+        showToast(view: view, "저장에 성공했어요 :)", withDuration: 2.0, delay: 1.5)
     }
-    
+//    func deleteData(id: UUID) {
+//        guard let context = context else { return }
+//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>.init(entityName: "Diary")
+//        fetchRequest.predicate = NSPredicate(format: "uuid = %@", id.uuidString)
+//        
+//        do {
+//            guard let result = try? context.fetch(fetchRequest),
+//                  let object = result.first as? NSManagedObject else { return }
+//            context.delete(object)
+//            
+//            try context.save()
+//        } catch {
+//            print("error: \(error.localizedDescription)")
+//        }
+//    }
     
     
     // MARK: - keyboard

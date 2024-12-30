@@ -6,24 +6,127 @@
 //
 
 import UIKit
+import CoreData
 
 class DeleteDiaryViewController: UIViewController {
-
+    var uuid : UUID?
+    
+    private let context: NSManagedObjectContext? = {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate? else {
+            print("AppDelegate가 초기화되지 않았습니다.")
+            return nil
+        }
+        return appDelegate?.persistentContainer.viewContext
+        
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        setUI()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    // 필요 시 옵저버 제거
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("BottomSheetDidClose"), object: nil)
     }
-    */
-
+    
+    func setUUID(uuid: UUID) {
+        self.uuid = uuid
+    }
+    
+    func setUI() {
+        let buttonView = UIView()
+        buttonView.backgroundColor = UIColor(red: 1, green: 0.973, blue: 0.961, alpha: 1)
+        buttonView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(buttonView)
+        
+        // Auto Layout 설정
+        NSLayoutConstraint.activate([
+            buttonView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -49),
+            buttonView.widthAnchor.constraint(equalToConstant: 361),
+            buttonView.heightAnchor.constraint(equalToConstant: 67)
+        ])
+        
+        // UIView에 탭 제스처 추가
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(deleteBtnTapped))
+        buttonView.addGestureRecognizer(tapGesture)
+        
+        // UIView가 사용자와 상호작용 가능하도록 설정
+        buttonView.isUserInteractionEnabled = true
+        
+        
+        let label = UILabel()
+        label.textColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1)
+        label.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 18)
+        label.text = "일기 삭제"
+        label.textAlignment = .center
+        buttonView.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.centerYAnchor.constraint(equalTo: buttonView.centerYAnchor),
+            label.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 50)
+        ])
+        
+        let trashcan = UIImageView()
+        trashcan.frame = CGRect(x: 0, y: 0, width: 15, height: 19)
+        trashcan.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        trashcan.image = UIImage(named: "trashcan")
+        buttonView.addSubview(trashcan)
+        trashcan.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            trashcan.centerYAnchor.constraint(equalTo: buttonView.centerYAnchor),
+            trashcan.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 15),
+            trashcan.widthAnchor.constraint(equalToConstant: 22),
+            trashcan.heightAnchor.constraint(equalToConstant: 22)
+        ])
+    }
+    
+    @objc func deleteBtnTapped() {
+        // 일기 삭제 버튼 bottom sheet 내리고,
+        // 부모 뷰 컨트롤러에서 popVC를 present
+        if let parentVC = self.presentingViewController {
+            self.dismiss(animated: false) {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                guard let popVC = storyboard.instantiateViewController(withIdentifier: "PopUpViewController") as? PopUpViewController else {
+                    print("Failed to instantiate or cast PopUpViewController")
+                    return
+                }
+                
+                // 데이터 전달
+                popVC.markImageName = "exclamatio-mark"
+                popVC.infoText = "일기를 삭제하시겠어요?"
+                popVC.cancelBtnText = "취소"
+                popVC.acceptBtnText = "삭제"
+                
+                // 클로저 전달
+                popVC.onAcceptAction = {
+                    self.deleteData(id: self.uuid!)
+                    parentVC.dismiss(animated: true)
+                    dismiss(animated: true)
+                    print("데이터를 삭제햇습니다") // A 상황 로직
+                }
+                
+                popVC.modalPresentationStyle = .overFullScreen
+                parentVC.present(popVC, animated: false, completion: nil)
+            }
+        }
+    }
+    
+    func deleteData(id: UUID) {
+        guard let context = context else { return }
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>.init(entityName: "Diary")
+        fetchRequest.predicate = NSPredicate(format: "uuid = %@", id.uuidString)
+        
+        do {
+            guard let result = try? context.fetch(fetchRequest),
+                  let object = result.first as? NSManagedObject else { return }
+            context.delete(object)
+            
+            try context.save()
+        } catch {
+            print("error: \(error.localizedDescription)")
+        }
+    }
 }

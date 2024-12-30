@@ -7,12 +7,12 @@
 
 import Foundation
 
-enum AppleFont : String {
+enum Font : String {
     case regular = "AppleSDGothicNeo-Regular"
     case bold = "AppleSDGothicNeo-Bold"
     case Light = "AppleSDGothicNeo-Light"
     case Medium = "AppleSDGothicNeo-Medium"
     case SemiBold = "AppleSDGothicNeo-SemiBold"
     case Thin = "AppleSDGothicNeo-Thin"
-    case UltraLight = "AppleSDGothicNeo-Thin"
+    case UltraLight = "AppleSDGothicNeo-UltraLight"
 }
