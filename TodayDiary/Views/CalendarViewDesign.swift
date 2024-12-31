@@ -47,10 +47,12 @@ func setCalendarDesign(calendarView: FSCalendar!) {
     calendarView.appearance.selectionColor = .clear    // 기본 선택 배경 투명 -> 커스텀 셀 배경으로 표시
     
     
-    // MARK: - 특정 일자 디자인
+    // MARK: - 기존 캘린더 일자 디자인
     calendarView.appearance.todayColor = .clear // 오늘 날짜 배경 원색
     calendarView.appearance.todaySelectionColor = .clear //오늘날짜 선택시 색상
     calendarView.appearance.selectionColor = .clear // 사용자가 선택한 날짜
     calendarView.appearance.titleSelectionColor = .clear // 선택한 날짜 글자색
+    calendarView.appearance.titleDefaultColor = .clear // 기본 날짜 글자색
+    calendarView.appearance.titlePlaceholderColor = .clear // 이전,다음달 날짜 글자색
 }
 

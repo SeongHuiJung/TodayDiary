@@ -58,6 +58,9 @@ class CalendarCell: FSCalendarCell {
         circleBackgroundView.addSubview(dayLabel)
         
         setupLayout()
+        
+        self.contentView.backgroundColor = .clear
+        self.backgroundView = nil
     }
     
     required init!(coder aDecoder: NSCoder!) {
@@ -118,7 +121,7 @@ class CalendarCell: FSCalendarCell {
         // 일기 데이터가 있는 경우 그림으로 표기
         // 전체 달력에서의 cell 이미지 변경
         guard let emoji = emoji else {return}
-        emotionView.image = getEmoji(emoji: emoji)
+        emotionView.image = getEmoji(emojiNumber: emoji)
     }
     
     func setCalendarCellDesign (monthPosition: FSCalendarMonthPosition, date: Date) {

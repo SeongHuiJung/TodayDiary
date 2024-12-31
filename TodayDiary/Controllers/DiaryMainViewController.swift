@@ -33,6 +33,8 @@ class DiaryMainViewController: UIViewController {
         
         view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
         
+        addNotification()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -123,6 +125,15 @@ class DiaryMainViewController: UIViewController {
             print("Error fetching December data: \(error)")
         }
         return (date, emoji, text, uuid)
+    }
+    
+    func addNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(showDeleteToast), name: NSNotification.Name("showDeleteToast"), object: nil)
+    }
+    
+    @objc func showDeleteToast() {
+        print("일기삭제")
+        showToast(view: view, "일기를 삭제했어요 :)", withDuration: 2.0, delay: 1.5)
     }
 }
 

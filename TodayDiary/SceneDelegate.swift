@@ -19,20 +19,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
         
-        
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-            
-            let window = UIWindow(windowScene: windowScene)
-            self.window = window
-
-            // 초기 루트 뷰 컨트롤러를 로딩 화면으로 설정
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let loadingVC = storyboard.instantiateViewController(withIdentifier: "LoadingViewController")
-            window.rootViewController = loadingVC
-            window.makeKeyAndVisible()
-
-            // 로그인 상태를 확인
-            checkAppleSignInState()
+//        
+//        guard let windowScene = (scene as? UIWindowScene) else { return }
+//            
+//            let window = UIWindow(windowScene: windowScene)
+//            self.window = window
+//
+//            // 초기 루트 뷰 컨트롤러를 로딩 화면으로 설정
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let loadingVC = storyboard.instantiateViewController(withIdentifier: "LoadingViewController")
+//            window.rootViewController = loadingVC
+//            window.makeKeyAndVisible()
+//
+//            // 로그인 상태를 확인
+//            checkAppleSignInState()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

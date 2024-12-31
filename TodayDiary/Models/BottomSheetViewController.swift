@@ -76,7 +76,7 @@ final class BottomSheetViewController: UIViewController {
         if isPannedable {
             self.configureViewPannedGesture()
             self.dragIndicatorView.alpha = 1
-        }
+        }        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -90,6 +90,10 @@ final class BottomSheetViewController: UIViewController {
         coordinator.animate { [weak self] _ in
             self?.showBottomSheet()
         }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("closeBottomSheet"), object: nil)
     }
     
     private func showBottomSheet(atState: BottomSheetViewState = .normal) {
@@ -232,7 +236,11 @@ extension BottomSheetViewController {
 }
 
 extension BottomSheetViewController {
-    func closeBottomSheet() {
+    // emoji cell 클릭 관련
+    
+    
+    @objc func closeBottomSheet() {
+        print("시트내리기")
         hideBottomSheetAndGoBack()
     }
     
