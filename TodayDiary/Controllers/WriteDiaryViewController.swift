@@ -82,6 +82,7 @@ class WriteDiaryViewController: UIViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        print("작성페이지 off")
     }
     
     // MARK: - layout design func
@@ -211,6 +212,7 @@ class WriteDiaryViewController: UIViewController {
         
         let viewController = DeleteDiaryViewController()
         viewController.setUUID(uuid: id)
+        viewController.writeDiaryVC = self
         let height: CGFloat = 137
         bottomSheetViewController = BottomSheetViewController(contentViewController: viewController,
                                                                   defaultHeight: height,

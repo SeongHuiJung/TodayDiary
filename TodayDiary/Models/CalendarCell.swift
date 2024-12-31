@@ -58,6 +58,9 @@ class CalendarCell: FSCalendarCell {
         circleBackgroundView.addSubview(dayLabel)
         
         setupLayout()
+        
+        self.contentView.backgroundColor = .clear
+        self.backgroundView = nil
     }
     
     required init!(coder aDecoder: NSCoder!) {

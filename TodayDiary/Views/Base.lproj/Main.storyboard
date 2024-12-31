@@ -49,11 +49,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a0F-pG-dzX" customClass="FSCalendar">
-                                <rect key="frame" x="19" y="139" width="355" height="550"/>
+                                <rect key="frame" x="19" y="139" width="355" height="679"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="550" id="baj-dX-KNA"/>
-                                </constraints>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="F4t-98-f3D"/>
@@ -62,6 +59,7 @@
                             <constraint firstItem="a0F-pG-dzX" firstAttribute="leading" secondItem="F4t-98-f3D" secondAttribute="leading" constant="19" id="Dnm-wG-eEG"/>
                             <constraint firstItem="F4t-98-f3D" firstAttribute="trailing" secondItem="a0F-pG-dzX" secondAttribute="trailing" constant="19" id="S16-8J-9a8"/>
                             <constraint firstItem="a0F-pG-dzX" firstAttribute="top" secondItem="F4t-98-f3D" secondAttribute="top" constant="80" id="jzQ-hc-KJw"/>
+                            <constraint firstItem="F4t-98-f3D" firstAttribute="bottom" secondItem="a0F-pG-dzX" secondAttribute="bottom" id="qhg-DV-G71"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="cqZ-Hh-MGu"/>

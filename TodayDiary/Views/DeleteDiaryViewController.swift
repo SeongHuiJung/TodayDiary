@@ -10,6 +10,7 @@ import CoreData
 
 class DeleteDiaryViewController: UIViewController {
     var uuid : UUID?
+    var writeDiaryVC : UIViewController?
     
     private let context: NSManagedObjectContext? = {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate? else {
@@ -24,11 +25,8 @@ class DeleteDiaryViewController: UIViewController {
         super.viewDidLoad()
 
         setUI()
-    }
-    
-    // 필요 시 옵저버 제거
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("BottomSheetDidClose"), object: nil)
+        
+        
     }
     
     func setUUID(uuid: UUID) {
@@ -43,9 +41,9 @@ class DeleteDiaryViewController: UIViewController {
         
         // Auto Layout 설정
         NSLayoutConstraint.activate([
-            buttonView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             buttonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -49),
-            buttonView.widthAnchor.constraint(equalToConstant: 361),
+            buttonView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             buttonView.heightAnchor.constraint(equalToConstant: 67)
         ])
         
@@ -101,11 +99,13 @@ class DeleteDiaryViewController: UIViewController {
                 popVC.acceptBtnText = "삭제"
                 
                 // 클로저 전달
+                // 데이터 최종삭제 확인버튼 누를시 해당 함수 실행
                 popVC.onAcceptAction = {
                     self.deleteData(id: self.uuid!)
-                    parentVC.dismiss(animated: true)
-                    dismiss(animated: true)
-                    print("데이터를 삭제햇습니다") // A 상황 로직
+                    parentVC.dismiss(animated: false)
+                    self.writeDiaryVC?.dismiss(animated: true)
+                    
+                    NotificationCenter.default.post(name: NSNotification.Name("showDeleteToast"), object: nil, userInfo: nil)
                 }
                 
                 popVC.modalPresentationStyle = .overFullScreen
