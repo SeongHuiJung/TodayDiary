@@ -34,6 +34,11 @@ class DiaryMainViewController: UIViewController {
         view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
         
         addNotification()
+//        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+//        backBarButtonItem.tintColor = .black  // 색상 변경
+//        self.navigationItem.backBarButtonItem = backBarButtonItem
+        
+        
         
     }
     
@@ -41,6 +46,7 @@ class DiaryMainViewController: UIViewController {
         // 데이터 변경 후 메인화면으로 돌아올 시 cell 업데이트
         calendarView.reloadData()
     }
+    
     
     func fetchAllData() {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -175,6 +181,8 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         secondVC.date = date
         secondVC.data = fetchData(dateData: date)
         
-        self.present(secondVC, animated: true, completion: nil)
+        navigationController?.pushViewController(secondVC, animated: true)
+        
+        //self.present(secondVC, animated: true, completion: nil)
     }
 }
