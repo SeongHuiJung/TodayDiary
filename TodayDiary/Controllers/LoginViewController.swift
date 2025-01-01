@@ -82,9 +82,14 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
             print("Apple User ID 저장됨: \(userID)")
             
             // MARK: - 기존 방법 메인 페이지로 이동
+            
             guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
             secondVC.modalPresentationStyle = .fullScreen
-            self.present(secondVC, animated: true, completion: nil)
+            // UINavigationController 생성
+            let navigationController = UINavigationController(rootViewController: secondVC)
+            //self.navigationController?.pushViewController(navigationController, animated: true)
+            navigationController.modalPresentationStyle = .fullScreen
+            self.present(navigationController, animated: true, completion: nil)
 
             
             // 첫 로그인시에만 얻을 수 있는 정보

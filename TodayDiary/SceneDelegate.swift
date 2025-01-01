@@ -14,25 +14,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
         
-//        
-//        guard let windowScene = (scene as? UIWindowScene) else { return }
-//            
-//            let window = UIWindow(windowScene: windowScene)
-//            self.window = window
-//
-//            // 초기 루트 뷰 컨트롤러를 로딩 화면으로 설정
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let loadingVC = storyboard.instantiateViewController(withIdentifier: "LoadingViewController")
-//            window.rootViewController = loadingVC
-//            window.makeKeyAndVisible()
-//
-//            // 로그인 상태를 확인
-//            checkAppleSignInState()
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        let window = UIWindow(windowScene: windowScene)
+        self.window = window
+        
+        // 초기 루트 뷰 컨트롤러를 로딩 화면으로 설정
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let loadingVC = storyboard.instantiateViewController(withIdentifier: "LoadingViewController")
+        window.rootViewController = loadingVC
+        window.makeKeyAndVisible()
+        
+        // 로그인 상태를 확인
+        checkAppleSignInState()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -79,8 +75,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         print("Apple ID is authorized.")
                         // DiaryMainViewController로 전환
                         guard let diaryMainVC = storyboard.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
-                        self.window?.rootViewController = diaryMainVC
-                    case .revoked, .notFound:
+                        
+                        self.window?.rootViewController = UINavigationController(rootViewController: diaryMainVC)
+                    case .revoked,.notFound:
                         print("Apple ID not found or revoked.")
                         // 로그인 화면으로 전환
                         guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }

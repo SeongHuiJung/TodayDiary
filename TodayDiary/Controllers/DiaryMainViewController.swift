@@ -34,17 +34,20 @@ class DiaryMainViewController: UIViewController {
         view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
         
         addNotification()
-//        let backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
-//        backBarButtonItem.tintColor = .black  // 색상 변경
-//        self.navigationItem.backBarButtonItem = backBarButtonItem
-        
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        // WriteDiaryVC 에서 interactivePopGestureRecognizer = nil 으로 변경해두었기 때문에
+        // 메인화면으로 돌아올때마다 interactivePopGestureRecognizer 설정해야함
+        // 해당 작업을 하지 않으면 WriteDiaryVC 에서 사용하던 제스쳐 설정을 그대로 따르기 때문에 메인 페이지에서 오류발생
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        
         // 데이터 변경 후 메인화면으로 돌아올 시 cell 업데이트
         calendarView.reloadData()
+        
+        calendarView.delegate = self
+        calendarView.dataSource = self
     }
     
     
@@ -53,21 +56,20 @@ class DiaryMainViewController: UIViewController {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Diary")
         do {
             let results = try context.fetch(fetchRequest)
-            print("불러오기 성공")
             for result in results {
                 
                 // Core Data의 속성에 접근하기 위해 Key-Value Coding (KVC) 방식 사용
                 if let date = result.value(forKey: "date") as? Date {
-                    print("Fetched title: \(date)")
+                    //print("Fetched title: \(date)")
                 }
                 if let emoji = result.value(forKey: "emoji") as? Int {
-                    print("Fetched content: \(emoji)")
+                    //print("Fetched content: \(emoji)")
                 }
                 if let text = result.value(forKey: "text") as? String {
-                    print("Fetched content: \(text)")
+                    //print("Fetched content: \(text)")
                 }
                 if let uuid = result.value(forKey: "uuid") as? UUID {
-                    print("Fetched content: \(uuid)")
+                    //print("Fetched content: \(uuid)")
                 }
             }
         } catch {
@@ -180,9 +182,14 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         // 데이터 전달
         secondVC.date = date
         secondVC.data = fetchData(dateData: date)
-        
         navigationController?.pushViewController(secondVC, animated: true)
         
         //self.present(secondVC, animated: true, completion: nil)
+    }
+}
+
+extension DiaryMainViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
     }
 }

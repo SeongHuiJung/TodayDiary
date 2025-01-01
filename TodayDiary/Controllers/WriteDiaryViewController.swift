@@ -65,7 +65,6 @@ class WriteDiaryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         loadData()
         setUI()
         setLayout()
@@ -77,6 +76,9 @@ class WriteDiaryViewController: UIViewController {
         
         registerNotifications()
         setNavigationBtn()
+        
+        // 커스텀 버튼을 추가하거나 특정 설정을 변경했을 때, 이 제스처가 의도대로 작동하지 않을 수 있다
+        // delegate를 초기화하여 제스처가 기본 동작을 따르도록 만듬. 이렇게 하면, 네비게이션 컨트롤러에서 커스텀 버튼을 추가했더라도 스와이프 제스처가 제대로 작동
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
 
