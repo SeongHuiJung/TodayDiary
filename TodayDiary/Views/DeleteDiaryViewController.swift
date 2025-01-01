@@ -103,9 +103,7 @@ class DeleteDiaryViewController: UIViewController {
                 popVC.onAcceptAction = {
                     self.deleteData(id: self.uuid!)
                     parentVC.dismiss(animated: false)
-                    self.writeDiaryVC?.dismiss(animated: true)
-                    
-                    NotificationCenter.default.post(name: NSNotification.Name("showDeleteToast"), object: nil, userInfo: nil)
+                    NotificationCenter.default.post(name: NSNotification.Name("backToMainVC"), object: nil, userInfo: nil)
                 }
                 
                 popVC.modalPresentationStyle = .overFullScreen

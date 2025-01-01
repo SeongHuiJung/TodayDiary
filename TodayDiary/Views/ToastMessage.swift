@@ -13,8 +13,6 @@ func showToast(view : UIView , _ message : String, withDuration: Double, delay: 
     let toastCheckImage = UIImageView()
     let toastBackground = UIView()
     
-    print("???")
-    
     // toastBackground
     toastBackground.frame = CGRect(x: 0, y: 0, width: 162, height: 32)
     toastBackground.layer.backgroundColor = UIColor(red: 0.739, green: 0.59, blue: 0.59, alpha: 1).cgColor

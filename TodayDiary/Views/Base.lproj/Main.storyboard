@@ -49,7 +49,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a0F-pG-dzX" customClass="FSCalendar">
-                                <rect key="frame" x="19" y="183" width="355" height="635"/>
+                                <rect key="frame" x="19" y="123" width="355" height="635"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
@@ -58,8 +58,8 @@
                         <constraints>
                             <constraint firstItem="a0F-pG-dzX" firstAttribute="leading" secondItem="F4t-98-f3D" secondAttribute="leading" constant="19" id="Dnm-wG-eEG"/>
                             <constraint firstItem="F4t-98-f3D" firstAttribute="trailing" secondItem="a0F-pG-dzX" secondAttribute="trailing" constant="19" id="S16-8J-9a8"/>
-                            <constraint firstItem="a0F-pG-dzX" firstAttribute="top" secondItem="F4t-98-f3D" secondAttribute="top" constant="80" id="jzQ-hc-KJw"/>
-                            <constraint firstItem="F4t-98-f3D" firstAttribute="bottom" secondItem="a0F-pG-dzX" secondAttribute="bottom" id="qhg-DV-G71"/>
+                            <constraint firstItem="a0F-pG-dzX" firstAttribute="top" secondItem="F4t-98-f3D" secondAttribute="top" constant="20" id="jzQ-hc-KJw"/>
+                            <constraint firstItem="F4t-98-f3D" firstAttribute="bottom" secondItem="a0F-pG-dzX" secondAttribute="bottom" constant="60" id="qhg-DV-G71"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="cqZ-Hh-MGu"/>
@@ -97,15 +97,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QfC-4y-Ntc">
-                                <rect key="frame" x="224.66666666666666" y="201" width="7.3333333333333428" height="12.666666666666657"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="7.3600000000000003" id="Jfp-WF-10k"/>
-                                    <constraint firstAttribute="height" constant="12.73" id="pOF-bR-Ldz"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="&gt;"/>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 / 200" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uX4-4y-jKo">
                                 <rect key="frame" x="305.66666666666669" y="239" width="49.333333333333314" height="18"/>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="15"/>
@@ -124,9 +115,7 @@
                             <constraint firstItem="aKa-Nn-9oL" firstAttribute="trailing" secondItem="8pP-HP-7Ml" secondAttribute="trailing" constant="166" id="Ri0-xD-nr7"/>
                             <constraint firstItem="kde-Oo-3sU" firstAttribute="centerX" secondItem="99A-Z4-okW" secondAttribute="centerX" id="iAp-sK-tVE"/>
                             <constraint firstItem="ac9-ZU-cXQ" firstAttribute="centerX" secondItem="99A-Z4-okW" secondAttribute="centerX" id="nlD-Uu-we2"/>
-                            <constraint firstItem="QfC-4y-Ntc" firstAttribute="top" secondItem="aKa-Nn-9oL" secondAttribute="top" constant="142" id="odS-ji-yXg"/>
                             <constraint firstItem="ac9-ZU-cXQ" firstAttribute="top" secondItem="kde-Oo-3sU" secondAttribute="bottom" constant="1" id="snk-LU-U1u"/>
-                            <constraint firstItem="QfC-4y-Ntc" firstAttribute="leading" secondItem="kde-Oo-3sU" secondAttribute="trailing" constant="11" id="zm4-G7-MsP"/>
                         </constraints>
                     </view>
                     <connections>

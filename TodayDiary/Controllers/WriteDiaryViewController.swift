@@ -68,6 +68,7 @@ class WriteDiaryViewController: UIViewController {
         
         loadData()
         setUI()
+        setLayout()
         TextViewSetting()
         setDate()
         setSaveBtn()
@@ -76,6 +77,7 @@ class WriteDiaryViewController: UIViewController {
         
         registerNotifications()
         setNavigationBtn()
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
 
     deinit {
@@ -111,6 +113,16 @@ class WriteDiaryViewController: UIViewController {
     
     
     // MARK: - layout design func
+    func setLayout() {
+        moodImage.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            moodImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 121),
+            moodImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 166),
+            moodImage.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 166),
+            moodImage.heightAnchor.constraint(equalToConstant: 61),
+            moodImage.widthAnchor.constraint(equalToConstant: 61)
+        ])
+    }
     func setEmojiView() {
         moodImage.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(setEmojiTapped))
@@ -137,7 +149,17 @@ class WriteDiaryViewController: UIViewController {
         
         // emoji cell 클릭 관련
         NotificationCenter.default.addObserver(self, selector: #selector(getEmojiSelected(_:)), name: NSNotification.Name("ClickEmojiNoti"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(backToMainVC), name: NSNotification.Name("backToMainVC"), object: nil)
     }
+    
+    @objc func backToMainVC() {
+        print("메인페이지로 이동")
+        navigationController?.popViewController(animated: true)
+        
+        NotificationCenter.default.post(name: NSNotification.Name("showDeleteToast"), object: nil, userInfo: nil)
+    }
+    
     func setUI() {
         view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
         dateLabel.textColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1)
@@ -305,21 +327,6 @@ class WriteDiaryViewController: UIViewController {
         
         showToast(view: view, "저장에 성공했어요 :)", withDuration: 2.0, delay: 1.5)
     }
-//    func deleteData(id: UUID) {
-//        guard let context = context else { return }
-//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>.init(entityName: "Diary")
-//        fetchRequest.predicate = NSPredicate(format: "uuid = %@", id.uuidString)
-//        
-//        do {
-//            guard let result = try? context.fetch(fetchRequest),
-//                  let object = result.first as? NSManagedObject else { return }
-//            context.delete(object)
-//            
-//            try context.save()
-//        } catch {
-//            print("error: \(error.localizedDescription)")
-//        }
-//    }
     
     
     // MARK: - keyboard
