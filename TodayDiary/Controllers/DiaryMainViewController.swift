@@ -11,45 +11,66 @@ import FSCalendar
 
 class DiaryMainViewController: UIViewController {
     
+    private let settingBtn: UIButton = {
+        let button = UIButton()
+        button.frame = CGRect(x: 0, y: 0, width: 27, height: 27)
+        button.backgroundColor = .clear
+        button.setImage(UIImage(named: "setting"), for: .normal)
+        button.isUserInteractionEnabled = true
+        //button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     @IBOutlet weak var calendarView: FSCalendar!
     var count = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchAllData()
-        
         // 프로토콜 연결
         calendarView.delegate = self
         calendarView.dataSource = self
         
-        calendarView.reloadData()
-        calendarView.placeholderType = .fillSixRows
+        calendarView.reloadData() // cell reload
         
         // 커스텀 셀 등록 (CalendarCell 클래스는 밑에서 구현)
         calendarView.register(CalendarCell.self, forCellReuseIdentifier: "CalendarCell")
         
-        // 캘린더 기본 디자인 설정
-        setCalendarDesign(calendarView: calendarView)
-        
-        view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
+        setUI() // 캘린더 ui 설정
+        setCalendarDesign(calendarView: calendarView) // 캘린더 기본 디자인 설정
+        setSettingBtn() // 설정버튼 설정
         
         addNotification()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        // 데이터 변경 후 메인화면으로 돌아올 시 cell 업데이트
+        calendarView.reloadData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         // WriteDiaryVC 에서 interactivePopGestureRecognizer = nil 으로 변경해두었기 때문에
         // 메인화면으로 돌아올때마다 interactivePopGestureRecognizer 설정해야함
         // 해당 작업을 하지 않으면 WriteDiaryVC 에서 사용하던 제스쳐 설정을 그대로 따르기 때문에 메인 페이지에서 오류발생
+        // 또한 viewDidAppear 에서 실행하는 이유는 write WriteDiaryVC 에서 이전 페이지로 온전히 다 넘어가지 않더라도 viewWillAppear 가 실행되기 때문에 WriteDiaryVC 에서 더이상 제스쳐가 먹히지 않음
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-        
-        // 데이터 변경 후 메인화면으로 돌아올 시 cell 업데이트
-        calendarView.reloadData()
-        
-        calendarView.delegate = self
-        calendarView.dataSource = self
     }
     
+    deinit {
+        print("메인 달력 뷰 deinit")
+    }
+    
+    func setUI() {
+        view.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
+    }
+    
+    func setSettingBtn() {
+        let barButton = UIBarButtonItem(customView: settingBtn)
+        // 네비게이션 바에 추가 (오른쪽 버튼)
+        navigationItem.rightBarButtonItem = barButton
+        settingBtn.addTarget(self, action: #selector(goSettingPage), for: .touchUpInside)
+    }
     
     func fetchAllData() {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -60,16 +81,16 @@ class DiaryMainViewController: UIViewController {
                 
                 // Core Data의 속성에 접근하기 위해 Key-Value Coding (KVC) 방식 사용
                 if let date = result.value(forKey: "date") as? Date {
-                    //print("Fetched title: \(date)")
+                    print("Fetched title: \(date)")
                 }
                 if let emoji = result.value(forKey: "emoji") as? Int {
-                    //print("Fetched content: \(emoji)")
+                    print("Fetched content: \(emoji)")
                 }
                 if let text = result.value(forKey: "text") as? String {
-                    //print("Fetched content: \(text)")
+                    print("Fetched content: \(text)")
                 }
                 if let uuid = result.value(forKey: "uuid") as? UUID {
-                    //print("Fetched content: \(uuid)")
+                    print("Fetched content: \(uuid)")
                 }
             }
         } catch {
@@ -137,6 +158,13 @@ class DiaryMainViewController: UIViewController {
     
     func addNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(showDeleteToast), name: NSNotification.Name("showDeleteToast"), object: nil)
+    }
+    
+    @objc func goSettingPage(){
+        print("click")
+        guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "SettingViewController") as? SettingViewController else { return }
+        secondVC.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(secondVC, animated: true)
     }
     
     @objc func showDeleteToast() {

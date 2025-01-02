@@ -23,7 +23,7 @@ class DeleteDiaryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setUI()
         
         

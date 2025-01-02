@@ -20,6 +20,10 @@ class LoginViewController: UIViewController {
         setUpConstraints()
     }
     
+    deinit {
+        print("로그인 화면 deinit")
+    }
+    
     // 버튼 레이아웃 설정 함수
     private func setUpConstraints() {
         appleLoginBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -81,8 +85,11 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
             UserDefaults.standard.set(userID, forKey: "AppleUserID")
             print("Apple User ID 저장됨: \(userID)")
             
+            // 첫 로그인시에만 얻을 수 있는 정보
+            let fullName = appleIdCredential.fullName
+            let email = appleIdCredential.email
+
             // MARK: - 기존 방법 메인 페이지로 이동
-            
             guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
             secondVC.modalPresentationStyle = .fullScreen
             // UINavigationController 생성
@@ -92,9 +99,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
             self.present(navigationController, animated: true, completion: nil)
 
             
-            // 첫 로그인시에만 얻을 수 있는 정보
-//            let fullName = appleIdCredential.fullName
-//            let email = appleIdCredential.email
+            
+            
 //            let identityToken = appleIdCredential.identityToken
 //            let authorizationCode = appleIdCredential.authorizationCode
             

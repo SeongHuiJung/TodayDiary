@@ -84,7 +84,7 @@ class WriteDiaryViewController: UIViewController {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-        print("작성페이지 off")
+        print("일기 작성 페이지 deinit")
     }
     
     // MARK: - Navigation
@@ -98,7 +98,6 @@ class WriteDiaryViewController: UIViewController {
         button.frame = CGRect(x: 0, y: 0, width: 30, height: 30) // 버튼 크기 설정
         button.addTarget(self, action: #selector(goBackPage), for: .touchUpInside)
         var barButton = UIBarButtonItem(customView: button)
-        
         // 네비게이션 바에 추가 (왼쪽 버튼)
         navigationItem.leftBarButtonItem = barButton
         
