@@ -18,7 +18,7 @@ class PopUpViewController: UIViewController {
     
     private let popView: UIView = {
         let view = UIView()
-        view.frame = CGRect(x: 0, y: 0, width: 324, height: 185)
+        view.frame = CGRect(x: 0, y: 0, width: 324, height: 194)
         view.backgroundColor = UIColor(red: 1, green: 0.973, blue: 0.961, alpha: 1)
         view.layer.cornerRadius = 16
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +45,7 @@ class PopUpViewController: UIViewController {
     
     private let cancelBtn: UIButton = {
         let button = UIButton()
-        button.frame = CGRect(x: 0, y: 0, width: 140, height: 35)
+        button.frame = CGRect(x: 0, y: 0, width: 140, height: 42)
         button.backgroundColor = UIColor(red: 0.837, green: 0.837, blue: 0.837, alpha: 1)
         button.layer.cornerRadius = 7
         button.setTitle("", for: .normal)
@@ -59,7 +59,7 @@ class PopUpViewController: UIViewController {
     
     private let acceptBtn: UIButton = {
         let button = UIButton()
-        button.frame = CGRect(x: 0, y: 0, width: 140, height: 35)
+        button.frame = CGRect(x: 0, y: 0, width: 140, height: 42)
         button.backgroundColor = UIColor(red: 0.797, green: 0.422, blue: 0.422, alpha: 1)
         button.layer.cornerRadius = 7
         button.setTitle("", for: .normal)
@@ -93,10 +93,10 @@ class PopUpViewController: UIViewController {
     
     func setLayout() {
         NSLayoutConstraint.activate([
-            popView.topAnchor.constraint(equalTo: view.topAnchor, constant: 308),
+            popView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             popView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 34),
             popView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -34),
-            popView.heightAnchor.constraint(equalToConstant: 185)
+            popView.heightAnchor.constraint(equalToConstant: 194)
         ])
         
         NSLayoutConstraint.activate([
@@ -112,17 +112,17 @@ class PopUpViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            cancelBtn.topAnchor.constraint(equalTo: popView.topAnchor, constant: 133),
+            cancelBtn.topAnchor.constraint(equalTo: popView.topAnchor, constant: 135),
             cancelBtn.leadingAnchor.constraint(equalTo: popView.leadingAnchor, constant: 17),
             cancelBtn.trailingAnchor.constraint(equalTo: popView.centerXAnchor, constant: -5),
-            cancelBtn.heightAnchor.constraint(equalToConstant: 35)
+            cancelBtn.heightAnchor.constraint(equalToConstant: 42)
         ])
         
         NSLayoutConstraint.activate([
-            acceptBtn.topAnchor.constraint(equalTo: popView.topAnchor, constant: 133),
+            acceptBtn.topAnchor.constraint(equalTo: popView.topAnchor, constant: 135),
             acceptBtn.leadingAnchor.constraint(equalTo: popView.centerXAnchor, constant: 5),
             acceptBtn.trailingAnchor.constraint(equalTo: popView.trailingAnchor, constant: -17),
-            acceptBtn.heightAnchor.constraint(equalToConstant: 35)
+            acceptBtn.heightAnchor.constraint(equalToConstant: 42)
         ])
     }
     

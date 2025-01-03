@@ -399,10 +399,49 @@ class WriteDiaryViewController: UIViewController {
     
     // MARK: - textView 관련
     func TextViewSetting() {
+        var flag = false
+        // placehold
+        // 저장된 일기가 없는 경우
+        if textView.text == "" {
+            // Custom PlaceHolder
+            textView.text = "일기를 작성해보세요"
+            textView.textColor = UIColor(red: 0.653, green: 0.653, blue: 0.653, alpha: 1)
+            flag = true
+        }
+        // 저장된 일기가 있는 경우
+        else {
+            textView.textColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1)
+        }
+        
+        // 행간 설정
+        let attrString = NSMutableAttributedString(string: textView.text!)
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 6
+        let font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
+        attrString.addAttribute(.font, value: font!, range: NSRange(location: 0, length: attrString.length))
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        textView.attributedText = attrString
+        
         textView.backgroundColor = .white
         textView.isScrollEnabled = true
         textView.delegate = self
         textView.translatesAutoresizingMaskIntoConstraints = false
+        
+
+        textView.autocapitalizationType = .none //자동 대문자 방지
+        textView.layer.cornerRadius = 16
+        // padding
+        textView.textContainerInset = UIEdgeInsets(top: 19, left: 19, bottom: 19, right: 19)
+        
+        if flag == true {
+            // Custom PlaceHolder
+            //textView.text = "일기를 작성해보세요"
+            textView.textColor = UIColor(red: 0.653, green: 0.653, blue: 0.653, alpha: 1)
+        }
+        // 저장된 일기가 있는 경우
+        else {
+            textView.textColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1)
+        }
         
         view.addSubview(textView)
         
@@ -412,27 +451,11 @@ class WriteDiaryViewController: UIViewController {
             textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -31),
             textView.heightAnchor.constraint(equalToConstant: 480) // 초기 높이
         ])
-        
-        textView.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 15)
-        textView.autocapitalizationType = .none //자동 대문자 방지
-        textView.layer.cornerRadius = 16
-        
-        // 저장된 일기가 없는 경우
-        if textView.text == "" {
-            // Custom PlaceHolder
-            textView.text = "일기를 작성해보세요"
-            textView.textColor = UIColor(red: 0.653, green: 0.653, blue: 0.653, alpha: 1)
-        }
-        // 저장된 일기가 있는 경우
-        else {
-            textView.textColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1)
-        }
-        
         updateTextCount()
-        
-        // padding
-        textView.textContainerInset = UIEdgeInsets(top: 19, left: 19, bottom: 19, right: 19)
     }
+    
+    
+    
     func updateTextCount() {
         // 글자 수 표시
         if textView.textColor == UIColor(red: 0.653, green: 0.653, blue: 0.653, alpha: 1) {
@@ -473,7 +496,6 @@ extension WriteDiaryViewController: UITextViewDelegate {
         if textView.text.count > maxTextCount {
             textView.deleteBackward()
         }
-        
         updateTextCount()
     }
 }

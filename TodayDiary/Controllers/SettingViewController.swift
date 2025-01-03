@@ -6,17 +6,8 @@
 //
 
 import UIKit
-import CoreData
 
 class SettingViewController: UIViewController {
-
-    private let context: NSManagedObjectContext? = {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate? else {
-            print("AppDelegate가 초기화되지 않았습니다.")
-            return nil
-        }
-        return appDelegate?.persistentContainer.viewContext
-    }()
     
     private let loginInfoView: UIView = {
         let view = UIView()
@@ -104,7 +95,6 @@ iCloud 용량이 가득찰 경우 저장되지 않아요.
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.interactivePopGestureRecognizer?.delegate = nil
         
         setNavigationBtn()
         setConstraint()
@@ -116,39 +106,8 @@ iCloud 용량이 가득찰 경우 저장되지 않아요.
         print("설정 뷰 deinit")
     }
     
-    // MARK: - 로그아웃, 회원탈퇴 함수
+    // MARK: - 로그아웃 함수
     @objc func logout() {
-        loadLoginVC()
-    }
-    
-    @objc func secession() {
-        print("???")
-        deleteAllData()
-        print("데이터 제거 완료")
-        loadLoginVC()
-    }
-    
-    func deleteAllData() {
-        guard let context = context else { return }
-        let entityNames = context.persistentStoreCoordinator?.managedObjectModel.entities.compactMap { $0.name } ?? []
-        do {
-            for entityName in entityNames {
-                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-                
-                // Execute batch delete
-                try context.execute(deleteRequest)
-            }
-            
-            // Save context after deletion
-            try context.save()
-            print("모든 데이터가 성공적으로 삭제되었습니다.")
-        } catch {
-            print("모든 데이터를 삭제하는 중 오류 발생: \(error.localizedDescription)")
-        }
-    }
-    
-    func loadLoginVC() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let popVC = storyboard.instantiateViewController(withIdentifier: "PopUpViewController") as? PopUpViewController else {
             print("Failed to instantiate or cast PopUpViewController")
@@ -159,20 +118,43 @@ iCloud 용량이 가득찰 경우 저장되지 않아요.
         popVC.infoText = "로그아웃 할까요?"
         popVC.cancelBtnText = "취소"
         popVC.acceptBtnText = "확인"
-        
+    
         // 클로저 전달
         // 최종 로그인 확인버튼 누를시 해당 함수 실행
         popVC.onAcceptAction = {
-            guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
-            
-            // UIWindow의 rootViewController를 loginVC로 변경하여 기존 vc 계층을 모두 deinit
+            let transitionView = UIView(frame: UIScreen.main.bounds)
+            transitionView.backgroundColor = .white
+            transitionView.alpha = 0.0
             guard let window = UIApplication.shared.windows.first else { return }
-            window.rootViewController = loginVC
-            window.makeKeyAndVisible()
+            window.addSubview(transitionView)
+            
+            // 애니메이션으로 페이드 효과 적용
+            UIView.animate(withDuration: 0.3, animations: {
+                transitionView.alpha = 1.0
+            }) { _ in
+                guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+                
+                // UIWindow의 rootViewController를 loginVC로 변경하여 기존 vc 계층을 모두 deinit
+                guard let window = UIApplication.shared.windows.first else { return }
+                window.rootViewController = loginVC
+                window.makeKeyAndVisible()
+                
+                // 전환 뷰 제거
+                transitionView.removeFromSuperview()
+            }
         }
-        
         popVC.modalPresentationStyle = .overFullScreen
         self.present(popVC, animated: false, completion: nil)
+    }
+    
+    @objc func showSecessionVC() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let secondVC = storyboard.instantiateViewController(withIdentifier: "SecessionViewController") as? SecessionViewController else {
+            print("Failed to instantiate or cast PopUpViewController")
+            return
+        }
+        secondVC.modalPresentationStyle = .overFullScreen
+        navigationController?.pushViewController(secondVC, animated: true)
     }
     
     // MARK: - layout 및 constraint, ui design
@@ -186,6 +168,8 @@ iCloud 용량이 가득찰 경우 저장되지 않아요.
     }
     
     func setNavigationBtn() {
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        
         // back 버튼
         var configuration = UIButton.Configuration.plain()  // 기본 스타일
         configuration.image = UIImage(named: "back")
@@ -214,7 +198,7 @@ iCloud 용량이 가득찰 경우 저장되지 않아요.
     }
     
     func addTargetTosecessionBtn() {
-        secessionBtn.addTarget(self, action: #selector(secession), for: .touchUpInside)
+        secessionBtn.addTarget(self, action: #selector(showSecessionVC), for: .touchUpInside)
     }
     
     func setConstraint() {

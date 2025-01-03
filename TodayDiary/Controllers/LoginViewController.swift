@@ -10,6 +10,7 @@ import AuthenticationServices
 
 class LoginViewController: UIViewController {
 
+    @IBOutlet weak var logoImage: UIImageView!
     let appleLoginBtn = ASAuthorizationAppleIDButton(type: .continue, style: .whiteOutline)
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +19,7 @@ class LoginViewController: UIViewController {
         view.addSubview(appleLoginBtn)
         appleLoginBtn.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
         setUpConstraints()
+        self.view.backgroundColor = UIColor(red: 1, green: 0.973, blue: 0.961, alpha: 1)
     }
     
     deinit {
@@ -31,7 +33,7 @@ class LoginViewController: UIViewController {
         // Auto Layout 제약조건
         NSLayoutConstraint.activate([
             appleLoginBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            appleLoginBtn.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            appleLoginBtn.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 41),
             appleLoginBtn.heightAnchor.constraint(equalToConstant: 50), // 버튼 높이
             appleLoginBtn.widthAnchor.constraint(equalToConstant: 250) // 버튼 너비
         ])

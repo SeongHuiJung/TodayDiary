@@ -138,9 +138,9 @@ class CalendarCell: FSCalendarCell {
         
         // 이번달 날짜가 아닌 경우 뿌옇게 표기
         if monthPosition == .next || monthPosition == .previous {
-            dayLabel.layer.opacity = 0.3
-            emotionView.layer.opacity = 0.3
-            circleBackgroundView.layer.opacity = 0.3
+            dayLabel.layer.opacity = 0.5
+            emotionView.layer.opacity = 0.5
+            circleBackgroundView.layer.opacity = 0.5
         }
     }
 }
