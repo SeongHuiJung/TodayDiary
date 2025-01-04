@@ -131,7 +131,7 @@ class DiaryMainViewController: UIViewController {
         
         do {
             let results = try context.fetch(fetchRequest)
-            print("\(month)월 \(day)일 데이터 불러오기 성공")
+            //print("\(month)월 \(day)일 데이터 불러오기 성공")
             for result in results {
                 if let _date = result.value(forKey: "date") as? Date {
                     print("Fetched date: \(_date)")

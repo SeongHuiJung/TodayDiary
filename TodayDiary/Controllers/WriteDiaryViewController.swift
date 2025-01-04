@@ -139,8 +139,9 @@ class WriteDiaryViewController: UIViewController {
         NSLayoutConstraint.activate([
             saveBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 31),
             saveBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -31),
-            saveBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -82),
-            saveBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+            //saveBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -82),
+            saveBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            saveBtn.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     func registerNotifications() {
@@ -342,21 +343,16 @@ class WriteDiaryViewController: UIViewController {
         if let currentConstraint = self.saveBtnBottomConstraint {
             currentConstraint.isActive = false
         }
-        
-        // 키보드 높이 구하기
-        if let userInfo = notification.userInfo,
-           let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            let keyboardHeight = keyboardFrame.height
-            // TextView의 bottomAnchor를 키보드 위로 올리기
-            textViewBottomConstraint = textView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -keyboardHeight - 50 - 10 )
-            textViewBottomConstraint?.isActive = true
-        }
 
         // 하단 버튼 키보드 올릴시 키보드 위로 고정
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            textViewBottomConstraint = textView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -keyboardFrame.height + self.view.safeAreaInsets.bottom - 10 - 50 - 10 )
+            textViewBottomConstraint?.isActive = true
+            
+            self.saveBtnBottomConstraint = self.saveBtn.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -keyboardFrame.height + self.view.safeAreaInsets.bottom - 10)
+            self.saveBtnBottomConstraint?.isActive = true
+              
             UIView.animate(withDuration: 0.3) {
-                self.saveBtnBottomConstraint = self.saveBtn.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -keyboardFrame.height + self.view.safeAreaInsets.bottom - 10)
-                self.saveBtnBottomConstraint?.isActive = true
                 self.view.layoutIfNeeded()
             }
         }
@@ -432,13 +428,15 @@ class WriteDiaryViewController: UIViewController {
         }
         
         view.addSubview(textView)
+        
+        textViewBottomConstraint = textView.bottomAnchor.constraint(equalTo: saveBtn.topAnchor, constant: -26)
+        
         // 원래 bottomAnchor 설정값 저장
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: currentTextCntLabel.topAnchor, constant: 20),
-            textView.bottomAnchor.constraint(equalTo: saveBtn.topAnchor, constant: -26),
+            textViewBottomConstraint!,
             textView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 31),
             textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -31),
-            //textView.heightAnchor.constraint(equalToConstant: 480) // 초기 높이
         ])
         updateTextCount()
     }
