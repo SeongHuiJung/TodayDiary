@@ -15,8 +15,7 @@ class WriteDiaryViewController: UIViewController {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var dayLabel: UILabel!
     
-    private var buttonBottomConstraint: NSLayoutConstraint?
-    var bottomSheetViewController: BottomSheetViewController?
+    
     
     private let context: NSManagedObjectContext? = {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate? else {
@@ -42,6 +41,8 @@ class WriteDiaryViewController: UIViewController {
         return button
     }()
     
+    var bottomSheetViewController: BottomSheetViewController?
+    
     var isSaveBtnEnabled: Bool = false {
         didSet {
             saveBtn.isEnabled = isSaveBtnEnabled
@@ -61,16 +62,18 @@ class WriteDiaryViewController: UIViewController {
     let textView = UITextView()
     var maxTextCount = 200
     var originalTextViewHeight: CGFloat = 0 // 텍스트 뷰의 원래 높이 저장
-    var textViewHeightConstraint: NSLayoutConstraint?
+    var textViewBottomConstraint: NSLayoutConstraint?
+    var saveBtnBottomConstraint: NSLayoutConstraint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadData()
         setUI()
         setLayout()
+        setSaveBtn()
         TextViewSetting()
         setDate()
-        setSaveBtn()
+        
         setEmojiView()
         checkSaveBtnIsActive()
         
@@ -131,16 +134,13 @@ class WriteDiaryViewController: UIViewController {
     }
     private func setSaveBtn() {
         view.addSubview(saveBtn)
-        
-        buttonBottomConstraint = saveBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
-        
+    
         // 버튼 제약 조건 설정
-        
         NSLayoutConstraint.activate([
             saveBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 31),
             saveBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -31),
-            saveBtn.heightAnchor.constraint(equalToConstant: 50),
-            buttonBottomConstraint!
+            saveBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -82),
+            saveBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
     func registerNotifications() {
@@ -330,67 +330,55 @@ class WriteDiaryViewController: UIViewController {
     }
     
     
+    
     // MARK: - keyboard
     // 키보드가 올라오면 호출되는 메서드에서 키보드가 textView와 겹치는 부분만큼만 크기를 줄입니다.
     @objc func keyboardWillShow(_ notification: NSNotification) {
-        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
         
-        let keyboardHeight = keyboardFrame.height
-        let safeAreaBottom = view.safeAreaInsets.bottom
-        
-        // textView의 현재 위치
-        let textViewBottom = textView.frame.origin.y + textView.frame.height
-        
-        self.originalTextViewHeight = self.textView.constraints.first(where: { $0.firstAttribute == .height })!.constant // 원래 높이 저장
-        
-        // 겹치는 부분을 계산 (textView bottom이 키보드 상단보다 클 경우)
-        // 50 -> 하단 버튼 높이
-        // 10 -> 키보드와 버튼 사이 간격 (키보드 올라왔을 때만)
-        if textViewBottom > view.frame.height - keyboardHeight - safeAreaBottom - 50 - 10 {
-            let overlapHeight = textViewBottom - (view.frame.height - keyboardHeight - safeAreaBottom - 50 - 10)
-            
-            // 텍스트 뷰의 높이를 겹친 부분만큼 줄여줍니다.
-            let newHeight = originalTextViewHeight - overlapHeight
-            
-            // 최대 높이보다 줄어들지 않도록 합니다.
-            let adjustedHeight = max(newHeight, 180) // 최소 높이는 180으로 설정
-            
-            // 기존 높이 제약이 있다면 이를 비활성화하고 새 제약을 설정
-            if let currentConstraint = textViewHeightConstraint {
-                currentConstraint.isActive = false
-            }
-            
-            UIView.animate(withDuration: 0.3) {
-                self.textViewHeightConstraint = self.textView.heightAnchor.constraint(equalToConstant: CGFloat(adjustedHeight))
-                self.textViewHeightConstraint?.isActive = true
-                self.view.layoutIfNeeded() // 애니메이션 적용
-            }
+        // 기존 높이 제약이 있다면 이를 비활성화하고 새 제약을 설정
+        if let currentConstraint = self.textViewBottomConstraint {
+            currentConstraint.isActive = false
+        }
+        if let currentConstraint = self.saveBtnBottomConstraint {
+            currentConstraint.isActive = false
         }
         
+        // 키보드 높이 구하기
+        if let userInfo = notification.userInfo,
+           let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            let keyboardHeight = keyboardFrame.height
+            // TextView의 bottomAnchor를 키보드 위로 올리기
+            textViewBottomConstraint = textView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -keyboardHeight - 50 - 10 )
+            textViewBottomConstraint?.isActive = true
+        }
+
         // 하단 버튼 키보드 올릴시 키보드 위로 고정
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            buttonBottomConstraint?.constant = -keyboardFrame.height + view.safeAreaInsets.bottom - 10
             UIView.animate(withDuration: 0.3) {
+                self.saveBtnBottomConstraint = self.saveBtn.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -keyboardFrame.height + self.view.safeAreaInsets.bottom - 10)
+                self.saveBtnBottomConstraint?.isActive = true
                 self.view.layoutIfNeeded()
             }
         }
     }
     @objc func keyboardWillHide(_ notification: Notification) {
         // 기존 높이 제약이 있다면 이를 비활성화하고 새 제약을 설정
-        if let currentConstraint = self.textViewHeightConstraint {
+        if let currentConstraint = self.textViewBottomConstraint {
             currentConstraint.isActive = false
         }
         
-        // 애니메이션을 사용하여 원래 높이로 되돌리기
-        UIView.animate(withDuration: 0.3) {
-            self.textViewHeightConstraint = self.textView.heightAnchor.constraint(equalToConstant: self.originalTextViewHeight)
-            self.textViewHeightConstraint?.isActive = true
-            self.view.layoutIfNeeded() // 애니메이션 적용
+        if let currentConstraint = self.saveBtnBottomConstraint {
+            currentConstraint.isActive = false
         }
-        
+
         // 하단 버튼 키보드 내리면 제자리 원위치
-        buttonBottomConstraint?.constant = 0
         UIView.animate(withDuration: 0.3) {
+            self.textViewBottomConstraint = self.textView.bottomAnchor.constraint(equalTo: self.saveBtn.topAnchor, constant: -26 )
+            self.textViewBottomConstraint?.isActive = true
+            
+            self.saveBtnBottomConstraint = self.saveBtn.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            self.saveBtnBottomConstraint?.isActive = true
+            
             self.view.layoutIfNeeded()
         }
     }
@@ -444,12 +432,13 @@ class WriteDiaryViewController: UIViewController {
         }
         
         view.addSubview(textView)
-        
+        // 원래 bottomAnchor 설정값 저장
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: currentTextCntLabel.topAnchor, constant: 20),
+            textView.bottomAnchor.constraint(equalTo: saveBtn.topAnchor, constant: -26),
             textView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 31),
             textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -31),
-            textView.heightAnchor.constraint(equalToConstant: 480) // 초기 높이
+            //textView.heightAnchor.constraint(equalToConstant: 480) // 초기 높이
         ])
         updateTextCount()
     }
