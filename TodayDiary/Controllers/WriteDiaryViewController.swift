@@ -320,13 +320,14 @@ class WriteDiaryViewController: UIViewController {
         // 새로운 데이터를 다시 생성하지 않고 수정으로 로드하기 위해 uuid 설정
         data.3 = uuid
         
-        do {
-            try context.save()
-            print("Data saved successfully!")
-        } catch {
-            print("Error saving data: \(error)")
-        }
+//        do {
+//            try context.save()
+//            print("Data saved successfully!")
+//        } catch {
+//            print("Error saving data: \(error)")
+//        }
         
+        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
         showToast(view: view, "저장에 성공했어요 :)", withDuration: 2.0, delay: 1.5)
     }
     
