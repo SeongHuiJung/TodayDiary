@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="24B91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="AccountInfo" representedClassName="AccountInfo" syncable="YES" codeGenerationType="category">
+        <attribute name="isRegistered" optional="YES" attributeType="Integer 64" usesScalarValueType="YES"/>
+    </entity>
     <entity name="Diary" representedClassName=".Diary" syncable="YES" codeGenerationType="category">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="emoji" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>

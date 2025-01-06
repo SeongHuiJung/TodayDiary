@@ -7,6 +7,7 @@
 
 import UIKit
 import AuthenticationServices
+import CoreData
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -59,11 +60,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
 
         // Save changes in the application's managed object context when the application transitions to the background.
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        CoreDataManager.shared.saveContext()
     }
 
     func checkAppleSignInState() {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
+        
+        CoreDataManager.shared.fetchIsRegistered()
         
         if let userID = UserDefaults.standard.string(forKey: "AppleUserID") {
             appleIDProvider.getCredentialState(forUserID: userID) { (credentialState, error) in
@@ -74,9 +77,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     case .authorized:
                         print("Apple ID is authorized.")
                         // DiaryMainViewController로 전환
+                        
+                        guard let isRegistered = CoreDataManager.shared.isRegistered else {
+                            // 로그인 화면으로 전환
+                            print("계정이 존재하지 않습니다. 로그인 화면으로 전환합니다.")
+                            guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+                            self.window?.rootViewController = loginVC
+                            return
+                        }
+                        print("계정이 존재합니다. 자동로그인을 진행합니다")
                         guard let diaryMainVC = storyboard.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
                         
                         self.window?.rootViewController = UINavigationController(rootViewController: diaryMainVC)
+
+
                     case .revoked,.notFound:
                         print("Apple ID not found or revoked.")
                         // 로그인 화면으로 전환
@@ -97,4 +111,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 }
-

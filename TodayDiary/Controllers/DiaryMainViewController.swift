@@ -26,7 +26,7 @@ class DiaryMainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchAllData()
+        
         // 프로토콜 연결
         calendarView.delegate = self
         calendarView.dataSource = self
@@ -71,90 +71,6 @@ class DiaryMainViewController: UIViewController {
         settingBtn.addTarget(self, action: #selector(goSettingPage), for: .touchUpInside)
     }
     
-    func fetchAllData() {
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Diary")
-        do {
-            let results = try context.fetch(fetchRequest)
-            for result in results {
-                
-                // Core Data의 속성에 접근하기 위해 Key-Value Coding (KVC) 방식 사용
-                if let date = result.value(forKey: "date") as? Date {
-                    print("Fetched title: \(date)")
-                }
-                if let emoji = result.value(forKey: "emoji") as? Int {
-                    print("Fetched content: \(emoji)")
-                }
-                if let text = result.value(forKey: "text") as? String {
-                    print("Fetched content: \(text)")
-                }
-                if let uuid = result.value(forKey: "uuid") as? UUID {
-                    print("Fetched content: \(uuid)")
-                }
-            }
-        } catch {
-            print("Error fetching data: \(error)")
-        }
-    }
-    
-    func fetchData(dateData: Date) -> (Date?, Int?, String?, UUID?) {
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Diary")
-        
-        let dateFormatter = DateFormatter()
-        
-        dateFormatter.dateFormat = "yyyy"
-        let year = Int(dateFormatter.string(from: dateData))!
-        
-        dateFormatter.dateFormat = "M"
-        let month = Int(dateFormatter.string(from: dateData))!
-        
-        dateFormatter.dateFormat = "d"
-        let day = Int(dateFormatter.string(from: dateData))!
-
-        var date : Date?
-        var emoji : Int?
-        var text : String?
-        var uuid: UUID?
-        
-        // Calendar와 DateComponents를 이용하여 12월 조건을 설정
-        let calendar = Calendar.current
-        let startComponents = DateComponents(year: year, month: month, day: day, hour: 0, minute: 0, second: 0) // 원하는 연도와 월의 시작일
-        let endComponents = DateComponents(year: year, month: month, day: day, hour: 23, minute: 59, second: 59) // 해당 월의 마지막일
-        
-        if let startDate = calendar.date(from: startComponents),
-           let endDate = calendar.date(from: endComponents) {
-            let predicate = NSPredicate(format: "date >= %@ AND date <= %@", startDate as NSDate, endDate as NSDate)
-            fetchRequest.predicate = predicate
-        }
-        
-        do {
-            let results = try context.fetch(fetchRequest)
-            //print("\(month)월 \(day)일 데이터 불러오기 성공")
-            for result in results {
-                if let _date = result.value(forKey: "date") as? Date {
-                    print("Fetched date: \(_date)")
-                    date = _date
-                }
-                if let _emoji = result.value(forKey: "emoji") as? Int {
-                    print("Fetched emoji: \(_emoji)")
-                    emoji = _emoji
-                }
-                if let _text = result.value(forKey: "text") as? String {
-                    print("Fetched text: \(_text)")
-                    text = _text
-                }
-                if let _uuid = result.value(forKey: "uuid") as? UUID {
-                    print("Fetched uuid: \(_uuid)")
-                    uuid = _uuid
-                }
-            }
-        } catch {
-            print("Error fetching December data: \(error)")
-        }
-        return (date, emoji, text, uuid)
-    }
-    
     func addNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(showDeleteToast), name: NSNotification.Name("showDeleteToast"), object: nil)
     }
@@ -188,7 +104,7 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         cell.configure(with: "\(day)") // 셀에 날짜를 표시
         
         // 해당 일에 맞는 데이터 로드
-        let data = fetchData(dateData: date)
+        let data = CoreDataManager.shared.loadDiary(dateData: date)
         
         // 해당 일에 데이터가 있는 경우에만 데이터 set
         if data.0 != nil {
@@ -208,7 +124,7 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         
         // 데이터 전달
         secondVC.date = date
-        secondVC.data = fetchData(dateData: date)
+        secondVC.data = CoreDataManager.shared.loadDiary(dateData: date)
         navigationController?.pushViewController(secondVC, animated: true)
         
         //self.present(secondVC, animated: true, completion: nil)

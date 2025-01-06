@@ -100,7 +100,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
             navigationController.modalPresentationStyle = .fullScreen
             self.present(navigationController, animated: true, completion: nil)
 
-            
+            CoreDataManager.shared.setTrueIsRegistered()
             
             
 //            let identityToken = appleIdCredential.identityToken

@@ -9,14 +9,6 @@ import UIKit
 import CoreData
 
 class SecessionViewController: UIViewController {
-
-    private let context: NSManagedObjectContext? = {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate? else {
-            print("AppDelegate가 초기화되지 않았습니다.")
-            return nil
-        }
-        return appDelegate?.persistentContainer.viewContext
-    }()
     
     private let infoView: UIView = {
         let view = UIView()
@@ -107,6 +99,7 @@ class SecessionViewController: UIViewController {
         // 최종 탈퇴 확인버튼 누를시 해당 함수 실행
         popVC.onAcceptAction = {
             self.deleteAllData()
+            CoreDataManager.shared.deleteIsRegistered()
             
             let transitionView = UIView(frame: UIScreen.main.bounds)
             transitionView.backgroundColor = .white
@@ -137,19 +130,18 @@ class SecessionViewController: UIViewController {
     // 회원 탈퇴 시에만 수행해야함
     // 모든 데이터 삭제
     func deleteAllData() {
-        guard let context = context else { return }
-        let entityNames = context.persistentStoreCoordinator?.managedObjectModel.entities.compactMap { $0.name } ?? []
+        let entityNames = CoreDataManager.shared.context .persistentStoreCoordinator?.managedObjectModel.entities.compactMap { $0.name } ?? []
         do {
             for entityName in entityNames {
                 let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
                 let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
                 
                 // Execute batch delete
-                try context.execute(deleteRequest)
+                try CoreDataManager.shared.context.execute(deleteRequest)
             }
             
             // Save context after deletion
-            try context.save()
+            try CoreDataManager.shared.context.save()
             print("모든 데이터가 성공적으로 삭제되었습니다.")
         } catch {
             print("모든 데이터를 삭제하는 중 오류 발생: \(error.localizedDescription)")
