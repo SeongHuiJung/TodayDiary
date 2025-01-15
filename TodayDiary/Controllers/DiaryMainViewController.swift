@@ -42,9 +42,8 @@ class DiaryMainViewController: UIViewController {
         
         addNotification()
         
+        // 네트워크 연결 안될시 안내 메시지 띄움
         if !NetworkCheck.shared.isConnected {
-            //showToast(view: self.view, "네트워크 연결 안됨", withDuration: 10.0, delay: 1.0)
-            
             let popVC = InfoPopUpViewController()
             
             // 데이터 전달
