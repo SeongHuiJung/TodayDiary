@@ -28,8 +28,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = loadingVC
         window.makeKeyAndVisible()
         
-        // 로그인 상태를 확인
-        checkAppleSignInState()
+        // 로딩 2초 후 화면 전환
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.checkAppleSignInState()
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

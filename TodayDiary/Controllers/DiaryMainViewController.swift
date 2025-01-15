@@ -41,6 +41,24 @@ class DiaryMainViewController: UIViewController {
         setSettingBtn() // 설정버튼 설정
         
         addNotification()
+        
+        if !NetworkCheck.shared.isConnected {
+            //showToast(view: self.view, "네트워크 연결 안됨", withDuration: 10.0, delay: 1.0)
+            
+            let popVC = InfoPopUpViewController()
+            
+            // 데이터 전달
+            popVC.infoText = """
+네트워크 연결이 끊겼어요!
+그동안 작성한 일기는
+네트워크가 다시 연결되면
+자동으로 iCloud 에 저장돼요.
+"""
+            popVC.acceptBtnText = "확인"
+            
+            popVC.modalPresentationStyle = .overFullScreen
+            self.present(popVC, animated: true, completion: nil)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,13 +72,6 @@ class DiaryMainViewController: UIViewController {
         // 해당 작업을 하지 않으면 WriteDiaryVC 에서 사용하던 제스쳐 설정을 그대로 따르기 때문에 메인 페이지에서 오류발생
         // 또한 viewDidAppear 에서 실행하는 이유는 write WriteDiaryVC 에서 이전 페이지로 온전히 다 넘어가지 않더라도 viewWillAppear 가 실행되기 때문에 WriteDiaryVC 에서 더이상 제스쳐가 먹히지 않음
         navigationController?.interactivePopGestureRecognizer?.delegate = self
-        
-        if !NetworkCheck.shared.isConnected {
-            showToast(view: self.view, "네트워크 연결 안됨", withDuration: 10.0, delay: 1.0)
-            let secondVC = SignUpAgreeViewController()
-            secondVC.modalPresentationStyle = .fullScreen
-            self.present(secondVC, animated: true, completion: nil)
-        }
     }
     
     deinit {
@@ -133,8 +144,6 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         secondVC.date = date
         secondVC.data = CoreDataManager.shared.loadDiary(dateData: date)
         navigationController?.pushViewController(secondVC, animated: false)
-        
-        //self.present(secondVC, animated: true, completion: nil)
     }
 }
 
