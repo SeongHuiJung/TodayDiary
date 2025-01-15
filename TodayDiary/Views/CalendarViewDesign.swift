@@ -9,7 +9,7 @@ import Foundation
 import FSCalendar
 
 func setCalendarDesign(calendarView: FSCalendar!) {
-    
+    calendarView.placeholderType = .fillSixRows
     
     calendarView.locale = Locale(identifier: "ko_KR")
     calendarView.scrollEnabled = true   // 가능
@@ -28,7 +28,7 @@ func setCalendarDesign(calendarView: FSCalendar!) {
     // 헤더 폰트 설정
     calendarView.appearance.headerTitleFont = UIFont(name: "AppleSDGothicNeo-Bold", size: 20)
     // 헤더의 날짜 포맷 설정
-    calendarView.appearance.headerDateFormat = "YYYY년 MM월"
+    calendarView.appearance.headerDateFormat = "YYYY년 M월"
     // 헤더의 폰트 색상 설정
     calendarView.appearance.headerTitleColor = UIColor(red: 0.556, green: 0.424, blue: 0.424, alpha: 1)
     // 헤더 높이 설정
@@ -47,10 +47,12 @@ func setCalendarDesign(calendarView: FSCalendar!) {
     calendarView.appearance.selectionColor = .clear    // 기본 선택 배경 투명 -> 커스텀 셀 배경으로 표시
     
     
-    // MARK: - 특정 일자 디자인
+    // MARK: - 기존 캘린더 일자 디자인
     calendarView.appearance.todayColor = .clear // 오늘 날짜 배경 원색
     calendarView.appearance.todaySelectionColor = .clear //오늘날짜 선택시 색상
     calendarView.appearance.selectionColor = .clear // 사용자가 선택한 날짜
     calendarView.appearance.titleSelectionColor = .clear // 선택한 날짜 글자색
+    calendarView.appearance.titleDefaultColor = .clear // 기본 날짜 글자색
+    calendarView.appearance.titlePlaceholderColor = .clear // 이전,다음달 날짜 글자색
 }
 

@@ -81,7 +81,7 @@ extension EmojiViewController: UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = customCollectionView.dequeueReusableCell(withReuseIdentifier: "emoji", for: indexPath) as! EmojiCell
-        cell.emojiImage.image = getEmoji(emoji: indexPath.row + 1)
+        cell.emojiImage.image = getEmoji(emojiNumber: indexPath.row + 1)
         return cell
     }
     
