@@ -10,6 +10,7 @@ import AuthenticationServices
 
 class LoginViewController: UIViewController {
 
+    @IBOutlet weak var logoImage: UIImageView!
     let appleLoginBtn = ASAuthorizationAppleIDButton(type: .continue, style: .whiteOutline)
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +19,11 @@ class LoginViewController: UIViewController {
         view.addSubview(appleLoginBtn)
         appleLoginBtn.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
         setUpConstraints()
+        self.view.backgroundColor = UIColor(red: 1, green: 0.973, blue: 0.961, alpha: 1)
+    }
+    
+    deinit {
+        print("로그인 화면 deinit")
     }
     
     // 버튼 레이아웃 설정 함수
@@ -27,7 +33,7 @@ class LoginViewController: UIViewController {
         // Auto Layout 제약조건
         NSLayoutConstraint.activate([
             appleLoginBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            appleLoginBtn.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            appleLoginBtn.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 41),
             appleLoginBtn.heightAnchor.constraint(equalToConstant: 50), // 버튼 높이
             appleLoginBtn.widthAnchor.constraint(equalToConstant: 250) // 버튼 너비
         ])
@@ -76,82 +82,71 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
         case let appleIdCredential as ASAuthorizationAppleIDCredential:
             // 매번 인증시 얻을 수 있는 정보
             let userID = appleIdCredential.user
+
+            let identityToken = appleIdCredential.identityToken // 5분 후 사용불가
+            let authorizationCode = appleIdCredential.authorizationCode // 10분 후 사용불가, 한번만 사용가능
+
             
-            // UserDefaults에 저장
-            UserDefaults.standard.set(userID, forKey: "AppleUserID")
-            print("Apple User ID 저장됨: \(userID)")
+            // Keychain에 저장
+            saveUserIDToKeychain(userID: userID)
             
+            // 첫 로그인시에만 얻을 수 있는 정보
+            let fullName = appleIdCredential.fullName
+            let email = appleIdCredential.email
+
             // MARK: - 기존 방법 메인 페이지로 이동
             guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
             secondVC.modalPresentationStyle = .fullScreen
-            self.present(secondVC, animated: true, completion: nil)
+            // UINavigationController 생성
+            let navigationController = UINavigationController(rootViewController: secondVC)
+            //self.navigationController?.pushViewController(navigationController, animated: true)
+            navigationController.modalPresentationStyle = .fullScreen
+            self.present(navigationController, animated: true, completion: nil)
 
-            
-            // 첫 로그인시에만 얻을 수 있는 정보
-//            let fullName = appleIdCredential.fullName
-//            let email = appleIdCredential.email
-//            let identityToken = appleIdCredential.identityToken
-//            let authorizationCode = appleIdCredential.authorizationCode
-            
+            CoreDataManager.shared.setTrueIsRegistered()
             print("Apple ID 로그인에 성공하였습니다.")
-//            print("사용자 ID: \(userIdentifier)")
-//            print("전체 이름: \(fullName?.givenName ?? "이미 로그인했음") \(fullName?.familyName ?? "")")
-//            print("이메일: \(email ?? "이미 로그인했음")")
-            
-            //identityToken :  사용자에 대한 정보를 앱에 안전하게 전달하는 JWT.
-//            print("Token: \(identityToken!)")
-            
-            // authorizationCode : 앱이 서버와 상호 작용하는 데 사용하는 토큰.
-            // 5분간 유효, 1번만 사용 가능
-//            print("authorizationCode: \(authorizationCode!)")
-            
-            // MARK: -  로그인화면부터 navigator 넣기 -> 성공
-            // but 메인화면부터 바로 시작하면 안됨. 그래서 자동로그인 기능은 좀 고려해볼것
-//            guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
-//            secondVC.modalPresentationStyle = .fullScreen
-//            self.navigationController?.pushViewController(secondVC, animated: true)
-//            
-            
-            
-            
-            // MARK: - gpt
-            // 화면1 (로그인 화면)에서 화면2로 이동
-            //let storyboard = UIStoryboard(name: "Main", bundle: nil)
-
-            // 화면2의 NavigationController를 불러옵니다.
-//            guard let navigationController = storyboard.instantiateViewController(withIdentifier: "DiaryMainViewController") as? UINavigationController else {
-//                print("NavigationController를 찾을 수 없습니다.")
-//                return }
-//            
-//            print("NavigationController 로드 성공") // 여기가 출력되면 정상적으로 불러온 것
-//            // 화면2의 NavigationController를 Root로 하여 present 합니다.
-//            navigationController.modalPresentationStyle = .fullScreen
-//            self.present(navigationController, animated: true, completion: nil)
-
-            
-            // 암호 기반 인증에 성공한 경우(iCloud), 사용자의 인증 정보를 확인하고 필요한 작업을 수행합니다
-            //        case let passwordCredential as ASPasswordCredential:
-            //            let userIdentifier = passwordCredential.user
-            //            let password = passwordCredential.password
-            //
-            //            print("암호 기반 인증에 성공하였습니다.")
-            //            print("사용자 이름: \(userIdentifier)")
-            //            print("비밀번호: \(password)")
-            //
-            //            // 여기에 로그인 성공 후 수행할 작업을 추가하세요.
-            //            let mainVC = MainViewController()
-            //            mainVC.modalPresentationStyle = .fullScreen
-            //            present(mainVC, animated: true)
-            //
-            //        default: break
-            
         default:
             break
         }
     }
     
+    // Keychain에 userID 저장
+    func saveUserIDToKeychain(userID: String) {
+        let data = Data(userID.utf8)
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword, // 일반 비밀번호 저장
+            kSecAttrAccount as String: "AppleUserID",      // 고유 키
+            kSecValueData as String: data                 // 저장할 데이터
+        ]
+        // 기존 데이터 삭제
+        SecItemDelete(query as CFDictionary)
+        // 새로운 데이터 추가
+        let status = SecItemAdd(query as CFDictionary, nil)
+        if status == errSecSuccess {
+            print("Keychain에 User ID 저장 성공")
+        } else {
+            print("Keychain에 User ID 저장 실패, 상태: \(status)")
+        }
+    }
+    
+    
+    
     // 로그인 실패 시
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         // handle error
+    }
+}
+
+// Keychain에서 userID 삭제
+func deleteUserIDFromKeychain() {
+    let query: [String: Any] = [
+        kSecClass as String: kSecClassGenericPassword,
+        kSecAttrAccount as String: "AppleUserID"
+    ]
+    let status = SecItemDelete(query as CFDictionary)
+    if status == errSecSuccess {
+        print("User ID 삭제 성공")
+    } else {
+        print("User ID 삭제 실패, 상태: \(status)")
     }
 }

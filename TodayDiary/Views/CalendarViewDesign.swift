@@ -9,7 +9,7 @@ import Foundation
 import FSCalendar
 
 func setCalendarDesign(calendarView: FSCalendar!) {
-    
+    calendarView.placeholderType = .fillSixRows
     
     calendarView.locale = Locale(identifier: "ko_KR")
     calendarView.scrollEnabled = true   // 가능
@@ -28,7 +28,7 @@ func setCalendarDesign(calendarView: FSCalendar!) {
     // 헤더 폰트 설정
     calendarView.appearance.headerTitleFont = UIFont(name: "AppleSDGothicNeo-Bold", size: 20)
     // 헤더의 날짜 포맷 설정
-    calendarView.appearance.headerDateFormat = "YYYY년 MM월"
+    calendarView.appearance.headerDateFormat = "YYYY년 M월"
     // 헤더의 폰트 색상 설정
     calendarView.appearance.headerTitleColor = UIColor(red: 0.556, green: 0.424, blue: 0.424, alpha: 1)
     // 헤더 높이 설정

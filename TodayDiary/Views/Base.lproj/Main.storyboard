@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M6i-Ot-qL0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -31,14 +31,35 @@
                     <view key="view" contentMode="scaleToFill" id="GH4-AU-7p5">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="titleText" translatesAutoresizingMaskIntoConstraints="NO" id="aoD-j4-P7X">
+                                <rect key="frame" x="133.33333333333334" y="287" width="126.33333333333334" height="29.666666666666686"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="smile" translatesAutoresizingMaskIntoConstraints="NO" id="uft-jV-nV6">
+                                <rect key="frame" x="145" y="336.66666666666669" width="103" height="103"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="103" id="85D-Kj-EHR"/>
+                                    <constraint firstAttribute="height" constant="103" id="KBO-WJ-ITk"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="Gsp-3n-ALD"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="uft-jV-nV6" firstAttribute="centerX" secondItem="GH4-AU-7p5" secondAttribute="centerX" id="B4g-9I-TN3"/>
+                            <constraint firstItem="uft-jV-nV6" firstAttribute="top" secondItem="aoD-j4-P7X" secondAttribute="bottom" constant="20" id="YkG-zt-UNh"/>
+                            <constraint firstItem="aoD-j4-P7X" firstAttribute="top" secondItem="Gsp-3n-ALD" secondAttribute="top" constant="228" id="vYp-0i-FGF"/>
+                            <constraint firstItem="aoD-j4-P7X" firstAttribute="centerX" secondItem="GH4-AU-7p5" secondAttribute="centerX" id="zJh-Ki-hIl"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="nmc-ZH-SKi"/>
+                    <connections>
+                        <outlet property="logoImage" destination="uft-jV-nV6" id="0qn-1Z-k8d"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3x3-5Z-kYe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1503" y="-35"/>
+            <point key="canvasLocation" x="2428.2442748091603" y="-35.211267605633807"/>
         </scene>
         <!--Diary Main View Controller-->
         <scene sceneID="nmK-us-hhm">
@@ -49,7 +70,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a0F-pG-dzX" customClass="FSCalendar">
-                                <rect key="frame" x="19" y="123" width="355" height="635"/>
+                                <rect key="frame" x="19" y="79" width="355" height="679"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
@@ -69,7 +90,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oyF-eD-IwH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3253" y="-35"/>
+            <point key="canvasLocation" x="3123" y="-35"/>
         </scene>
         <!--Write Diary View Controller-->
         <scene sceneID="whi-Ly-i0m">
@@ -127,7 +148,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3G8-hX-YPk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4081.679389312977" y="-65.492957746478879"/>
+            <point key="canvasLocation" x="3799" y="-44"/>
         </scene>
         <!--Emoji View Controller-->
         <scene sceneID="GsJ-u0-Rod">
@@ -142,7 +163,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YQt-R9-5Oe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4805.3435114503818" y="-65.492957746478879"/>
+            <point key="canvasLocation" x="4485" y="-44"/>
         </scene>
         <!--Loading View Controller-->
         <scene sceneID="5qa-ni-57S">
@@ -173,10 +194,11 @@
                             <constraint firstItem="oSy-Ve-mUY" firstAttribute="top" secondItem="GRG-Qj-jzV" secondAttribute="top" constant="295" id="Y5q-ia-5tr"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="RfD-VW-9QI"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XVu-w9-cNb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="801" y="-35"/>
+            <point key="canvasLocation" x="1727.4809160305342" y="-35.211267605633807"/>
         </scene>
         <!--Pop Up View Controller-->
         <scene sceneID="yue-Dh-YtZ">
@@ -191,25 +213,37 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bsv-mb-Wyk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5457.2519083969464" y="-65.492957746478879"/>
+            <point key="canvasLocation" x="5189" y="-44"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="dz9-bc-1Ua">
+        <!--Setting View Controller-->
+        <scene sceneID="haR-5v-VcW">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="M6i-Ot-qL0" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ppG-bW-ldK">
-                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="b0x-Z1-3xc" kind="relationship" relationship="rootViewController" id="sbe-cO-j89"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NAr-Wg-q4w" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="SettingViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UEd-dU-DdI" customClass="SettingViewController" customModule="TodayDiary" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Dnz-pJ-qRO">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="tuV-gQ-xQZ"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Wyh-u8-pxD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3253" y="-777"/>
+            <point key="canvasLocation" x="3123" y="679"/>
+        </scene>
+        <!--Secession View Controller-->
+        <scene sceneID="go5-WV-1m7">
+            <objects>
+                <viewController storyboardIdentifier="SecessionViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FDi-lQ-bXd" customClass="SecessionViewController" customModule="TodayDiary" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Dal-Ou-u7M">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="uqI-yw-xIO"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TJu-U3-ql5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5900" y="-44"/>
         </scene>
     </scenes>
     <resources>

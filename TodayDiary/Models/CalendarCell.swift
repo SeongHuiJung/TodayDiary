@@ -102,6 +102,8 @@ class CalendarCell: FSCalendarCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         dayLabel.layer.opacity = 1
+        emotionView.layer.opacity = 1
+        circleBackgroundView.layer.opacity = 1
         circleBackgroundView.backgroundColor = .clear
         dayLabel.textColor = UIColor(red: 0.564, green: 0.477, blue: 0.477, alpha: 1)
         emotionView.backgroundColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
@@ -130,7 +132,6 @@ class CalendarCell: FSCalendarCell {
         
         // 오늘인 경우 동그라미 표기, 일자 글씨 색 변경
         if dateFormatter.string(from: date) == dateFormatter.string(from: Date()) {
-            print("동그라미 \(dateFormatter.string(from: date))")
             circleBackgroundView.backgroundColor = UIColor(red: 0.565, green: 0.478, blue: 0.478, alpha: 1)
             dayLabel.textColor = UIColor(red: 1, green: 0.971, blue: 0.96, alpha: 1)
         }
@@ -138,6 +139,8 @@ class CalendarCell: FSCalendarCell {
         // 이번달 날짜가 아닌 경우 뿌옇게 표기
         if monthPosition == .next || monthPosition == .previous {
             dayLabel.layer.opacity = 0.5
+            emotionView.layer.opacity = 0.5
+            circleBackgroundView.layer.opacity = 0.5
         }
     }
 }

@@ -11,22 +11,10 @@ import CoreData
 class DeleteDiaryViewController: UIViewController {
     var uuid : UUID?
     var writeDiaryVC : UIViewController?
-    
-    private let context: NSManagedObjectContext? = {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate? else {
-            print("AppDelegate가 초기화되지 않았습니다.")
-            return nil
-        }
-        return appDelegate?.persistentContainer.viewContext
-        
-    }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setUI()
-        
-        
     }
     
     func setUUID(uuid: UUID) {
@@ -101,7 +89,7 @@ class DeleteDiaryViewController: UIViewController {
                 // 클로저 전달
                 // 데이터 최종삭제 확인버튼 누를시 해당 함수 실행
                 popVC.onAcceptAction = {
-                    self.deleteData(id: self.uuid!)
+                    CoreDataManager.shared.deleteDiary(id: self.uuid!)
                     parentVC.dismiss(animated: false)
                     NotificationCenter.default.post(name: NSNotification.Name("backToMainVC"), object: nil, userInfo: nil)
                 }
@@ -109,22 +97,6 @@ class DeleteDiaryViewController: UIViewController {
                 popVC.modalPresentationStyle = .overFullScreen
                 parentVC.present(popVC, animated: false, completion: nil)
             }
-        }
-    }
-    
-    func deleteData(id: UUID) {
-        guard let context = context else { return }
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>.init(entityName: "Diary")
-        fetchRequest.predicate = NSPredicate(format: "uuid = %@", id.uuidString)
-        
-        do {
-            guard let result = try? context.fetch(fetchRequest),
-                  let object = result.first as? NSManagedObject else { return }
-            context.delete(object)
-            
-            try context.save()
-        } catch {
-            print("error: \(error.localizedDescription)")
         }
     }
 }

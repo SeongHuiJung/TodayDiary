@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "maple.png",
+      "filename" : "settiing.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "maple 1.png",
+      "filename" : "settiing@x2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "maple 2.png",
+      "filename" : "settiing@x3.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
