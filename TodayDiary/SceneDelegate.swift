@@ -68,7 +68,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         CoreDataManager.shared.fetchIsRegistered()
         
-        if let userID = UserDefaults.standard.string(forKey: "AppleUserID") {
+        if let userID = loadUserIDFromKeychain() {
             appleIDProvider.getCredentialState(forUserID: userID) { (credentialState, error) in
                 DispatchQueue.main.async {
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -109,5 +109,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.window?.rootViewController = loginVC
             }
         }
+    }
+    
+    // Keychain에서 userID 가져오기
+    func loadUserIDFromKeychain() -> String? {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: "AppleUserID",
+            kSecReturnData as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ]
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
+        if status == errSecSuccess {
+            if let data = item as? Data {
+                print("Keychain User ID 불러오기 성공")
+                return String(data: data, encoding: .utf8)
+            }
+        } else {
+            print("User ID 불러오기 실패, 상태: \(status)")
+        }
+        return nil
     }
 }

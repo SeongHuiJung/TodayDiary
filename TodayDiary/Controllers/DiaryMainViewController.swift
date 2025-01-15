@@ -125,7 +125,7 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         // 데이터 전달
         secondVC.date = date
         secondVC.data = CoreDataManager.shared.loadDiary(dateData: date)
-        navigationController?.pushViewController(secondVC, animated: true)
+        navigationController?.pushViewController(secondVC, animated: false)
         
         //self.present(secondVC, animated: true, completion: nil)
     }
