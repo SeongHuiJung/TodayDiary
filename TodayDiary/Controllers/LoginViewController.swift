@@ -136,3 +136,17 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
         // handle error
     }
 }
+
+// Keychain에서 userID 삭제
+func deleteUserIDFromKeychain() {
+    let query: [String: Any] = [
+        kSecClass as String: kSecClassGenericPassword,
+        kSecAttrAccount as String: "AppleUserID"
+    ]
+    let status = SecItemDelete(query as CFDictionary)
+    if status == errSecSuccess {
+        print("User ID 삭제 성공")
+    } else {
+        print("User ID 삭제 실패, 상태: \(status)")
+    }
+}

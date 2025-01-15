@@ -142,6 +142,9 @@ iCloud 용량이 가득찰 경우 저장되지 않아요.
                 // 전환 뷰 제거
                 transitionView.removeFromSuperview()
             }
+            
+            // keychain 에 저장된 로그인 정보 삭제
+            deleteUserIDFromKeychain()
         }
         popVC.modalPresentationStyle = .overFullScreen
         self.present(popVC, animated: false, completion: nil)

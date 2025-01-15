@@ -121,6 +121,9 @@ class SecessionViewController: UIViewController {
                 // 전환 뷰 제거
                 transitionView.removeFromSuperview()
             }
+            
+            // keychain 에 저장된 로그인 정보 삭제
+            deleteUserIDFromKeychain()
         }
         
         popVC.modalPresentationStyle = .overFullScreen
