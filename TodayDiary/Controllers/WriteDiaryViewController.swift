@@ -50,7 +50,7 @@ class WriteDiaryViewController: UIViewController {
     var selectedEmoji: Int?
     
     let textView = UITextView()
-    var maxTextCount = 200
+    var maxTextCount = 1000
     var originalTextViewHeight: CGFloat = 0 // 텍스트 뷰의 원래 높이 저장
     var textViewBottomConstraint: NSLayoutConstraint?
     var saveBtnBottomConstraint: NSLayoutConstraint?

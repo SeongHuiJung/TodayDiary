@@ -16,7 +16,7 @@ class InfoPopUpViewController: UIViewController {
     
     private let popView: UIView = {
         let view = UIView()
-        view.frame = CGRect(x: 0, y: 0, width: 324, height: 256)
+        //view.frame = CGRect(x: 0, y: 0, width: 324, height: 256)
         view.backgroundColor = UIColor(red: 1, green: 0.973, blue: 0.961, alpha: 1)
         view.layer.cornerRadius = 16
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -60,11 +60,9 @@ class InfoPopUpViewController: UIViewController {
         super.viewDidLoad()
         
         addAllSubViews()
-        setLayout()
-        
         setUI()
         setData()
-        
+        setLayout()
         addTargerBtn()
     }
     
@@ -76,11 +74,16 @@ class InfoPopUpViewController: UIViewController {
     }
     
     func setLayout() {
+
+        infoLabel.sizeToFit()
+        let labelHeight = infoLabel.frame.size.height
+        print(labelHeight)
+        
         NSLayoutConstraint.activate([
             popView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             popView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 34),
             popView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -34),
-            popView.heightAnchor.constraint(equalToConstant: 256)
+            popView.heightAnchor.constraint(equalToConstant: labelHeight + 168)
         ])
         
         NSLayoutConstraint.activate([
@@ -96,7 +99,7 @@ class InfoPopUpViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            acceptBtn.topAnchor.constraint(equalTo: popView.topAnchor, constant: 197),
+            acceptBtn.bottomAnchor.constraint(equalTo: popView.bottomAnchor, constant: -17),
             acceptBtn.leadingAnchor.constraint(equalTo: popView.leadingAnchor, constant: 17),
             acceptBtn.trailingAnchor.constraint(equalTo: popView.trailingAnchor, constant: -17),
             acceptBtn.heightAnchor.constraint(equalToConstant: 42)
@@ -125,7 +128,7 @@ class InfoPopUpViewController: UIViewController {
     ///    popup 을 생성한 쪽에서 실행할 로직 작성
     ///}
     @objc func tappedAcceptBtn() {
-        dismiss(animated: false)
+        dismissPopup()
     }
     
     // popView 이외의 화면 클릭시 pop 뷰 끄는 함수
@@ -133,8 +136,15 @@ class InfoPopUpViewController: UIViewController {
         let tapLocation = sender.location(in: view)
         if let popView = view.subviews.first(where: { $0 is UIView && $0.layer.cornerRadius == 16 }) {
             if !popView.frame.contains(tapLocation) {
-                self.dismiss(animated: false)
+                dismissPopup()
             }
         }
     }
+    
+    func dismissPopup() {
+            // 팝업을 닫고, callback 호출
+            dismiss(animated: false) { [weak self] in
+                PopUpManager.shared.popupDidDismiss()
+            }
+        }
 }

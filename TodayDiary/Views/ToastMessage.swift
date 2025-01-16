@@ -21,7 +21,7 @@ func showToast(view : UIView , _ message : String, withDuration: Double, delay: 
     toastBackground.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         toastBackground.topAnchor.constraint(equalTo: view.topAnchor, constant: 75),
-        toastBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 116),
+        toastBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         toastBackground.widthAnchor.constraint(equalToConstant: 162),
         toastBackground.heightAnchor.constraint(equalToConstant: 32)
     ])
