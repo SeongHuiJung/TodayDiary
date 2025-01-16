@@ -59,11 +59,6 @@ class DiaryMainViewController: UIViewController {
 """
             showInfoPopUpView(infoText: popText, acceptBtnText: "확인")
         }
-        
-        // 테스트 목적으로 트리거 실행
-        triggerCloudKitQuotaExceeded()
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -137,7 +132,7 @@ class DiaryMainViewController: UIViewController {
     }
     
     
-    
+    // MARK: - 디버깅용 iCloud 꽉 찬 경우 테스트
     func triggerCloudKitQuotaExceeded() {
         // CKError.quotaExceeded 시뮬레이션
         let simulatedError = NSError(
