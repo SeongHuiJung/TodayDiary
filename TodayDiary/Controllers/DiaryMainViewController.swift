@@ -8,9 +8,16 @@
 import UIKit
 import CoreData
 import FSCalendar
+import CloudKit
 
 class DiaryMainViewController: UIViewController {
     
+    // 이상하게 이거 지우면 NetworkCheck의 monitor.pathUpdateHandler가 실행되지 않음..
+//    private let empty: UILabel = {
+//        let label = UILabel()
+//        return label
+//    }()
+
     private let settingBtn: UIButton = {
         let button = UIButton()
         button.frame = CGRect(x: 0, y: 0, width: 27, height: 27)
@@ -44,20 +51,19 @@ class DiaryMainViewController: UIViewController {
         
         // 네트워크 연결 안될시 안내 메시지 띄움
         if !NetworkCheck.shared.isConnected {
-            let popVC = InfoPopUpViewController()
-            
-            // 데이터 전달
-            popVC.infoText = """
+            let popText = """
 네트워크 연결이 끊겼어요!
 그동안 작성한 일기는
 네트워크가 다시 연결되면
 자동으로 iCloud 에 저장돼요.
 """
-            popVC.acceptBtnText = "확인"
-            
-            popVC.modalPresentationStyle = .overFullScreen
-            self.present(popVC, animated: true, completion: nil)
+            showInfoPopUpView(infoText: popText, acceptBtnText: "확인")
         }
+        
+        // 테스트 목적으로 트리거 실행
+        triggerCloudKitQuotaExceeded()
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -90,6 +96,63 @@ class DiaryMainViewController: UIViewController {
     
     func addNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(showDeleteToast), name: NSNotification.Name("showDeleteToast"), object: nil)
+        
+        // cloudkit 저장소 꽉 차서 더이상 저장 못하는 경우 사용자에게 안내
+        NotificationCenter.default.addObserver(
+            forName: .NSPersistentStoreRemoteChange,
+            object: nil,
+            queue: .main
+        ) { notification in
+            // 동기화 상태를 알림에서 확인
+            if let userInfo = notification.userInfo,
+               let cloudKitError = userInfo[NSUnderlyingErrorKey] as? NSError {
+                print("CloudKit sync error: \(cloudKitError)")
+
+                // iCloud 저장소가 꽉 찬 경우 처리
+                if cloudKitError.code == CKError.quotaExceeded.rawValue {
+                    let popText = """
+        iCloud 저장소가 꽉 찼어요!
+        저장소를 비우기 전까진
+        핸드폰에 일기가 저장돼요.
+        저장소를 비우면 자동으로
+        iCloud 동기화가 완료 됩니다.
+        """
+                    self.showInfoPopUpView(infoText: popText, acceptBtnText: "확인")
+                }
+            }
+        }
+    }
+    
+    func showInfoPopUpView(infoText: String, acceptBtnText: String) {
+        PopUpManager.shared.addPopup { [weak self] in
+            guard let self = self else { return }
+            let popVC = InfoPopUpViewController()
+            
+            popVC.infoText = infoText
+            popVC.acceptBtnText = acceptBtnText
+            popVC.modalPresentationStyle = .overFullScreen
+            
+            self.present(popVC, animated: true, completion: nil)
+        }
+    }
+    
+    
+    
+    func triggerCloudKitQuotaExceeded() {
+        // CKError.quotaExceeded 시뮬레이션
+        let simulatedError = NSError(
+            domain: CKError.errorDomain,
+            code: CKError.quotaExceeded.rawValue,
+            userInfo: [NSLocalizedDescriptionKey: "iCloud 저장소가 꽉 찼습니다."]
+        )
+
+        // 알림 생성 및 전송
+        let userInfo: [AnyHashable: Any] = [NSUnderlyingErrorKey: simulatedError]
+        NotificationCenter.default.post(
+            name: .NSPersistentStoreRemoteChange,
+            object: nil,
+            userInfo: userInfo
+        )
     }
     
     @objc func goSettingPage(){

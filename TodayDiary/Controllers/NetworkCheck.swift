@@ -10,7 +10,7 @@ import Network
 
 final class NetworkCheck{
     static let shared = NetworkCheck()
-    private let queue = DispatchQueue.global()
+    private let queue = DispatchQueue(label: "NetworkMonitor")
     private let monitor: NWPathMonitor
     public private(set) var isConnected: Bool = false
     public private(set) var connectionType: ConnectionType = .unknown
@@ -31,8 +31,8 @@ final class NetworkCheck{
     // Network Monitoring 시작
     public func startMonitoring(){
         monitor.start(queue: queue)
+
         monitor.pathUpdateHandler = { [weak self] path in
-            
             self?.isConnected = path.status == .satisfied
             self?.getConnectionType(path)
             
@@ -41,7 +41,6 @@ final class NetworkCheck{
             } else {
                 print("네트워크 연결 오류")
             }
-            
         }
     }
     

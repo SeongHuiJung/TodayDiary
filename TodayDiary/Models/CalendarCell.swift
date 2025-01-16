@@ -142,5 +142,10 @@ class CalendarCell: FSCalendarCell {
             emotionView.layer.opacity = 0.5
             circleBackgroundView.layer.opacity = 0.5
         }
+        
+        if Date() < date {
+            dayLabel.layer.opacity = 0.5
+            circleBackgroundView.layer.opacity = 0.5
+        }
     }
 }
