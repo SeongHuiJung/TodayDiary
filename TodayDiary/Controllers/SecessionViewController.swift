@@ -72,10 +72,15 @@ class SecessionViewController: UIViewController {
         setNavigationBar()
         setConstraint()
         addTargetsecessionBtn()
+        setUI()
     }
     
     deinit {
         print("secessionVC deinit")
+    }
+    
+    func setUI() {
+        view.backgroundColor = .white
     }
     
     func addTargetsecessionBtn() {

@@ -59,6 +59,8 @@ class DiaryMainViewController: UIViewController {
 """
             showInfoPopUpView(infoText: popText, acceptBtnText: "확인")
         }
+        
+        calendarView.reloadData() // cell reload
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -151,7 +153,6 @@ class DiaryMainViewController: UIViewController {
     }
     
     @objc func goSettingPage(){
-        print("click")
         guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "SettingViewController") as? SettingViewController else { return }
         secondVC.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(secondVC, animated: true)

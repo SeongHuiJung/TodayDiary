@@ -77,7 +77,6 @@ class InfoPopUpViewController: UIViewController {
 
         infoLabel.sizeToFit()
         let labelHeight = infoLabel.frame.size.height
-        print(labelHeight)
         
         NSLayoutConstraint.activate([
             popView.centerYAnchor.constraint(equalTo: view.centerYAnchor),

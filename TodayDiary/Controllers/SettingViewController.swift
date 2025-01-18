@@ -100,10 +100,15 @@ iCloud 용량이 가득찰 경우 저장되지 않아요.
         setConstraint()
         setLogoutBtn()
         addTargetTosecessionBtn()
+        setUI()
     }
     
     deinit {
         print("설정 뷰 deinit")
+    }
+    
+    func setUI() {
+        view.backgroundColor = .white
     }
     
     // MARK: - 로그아웃 함수

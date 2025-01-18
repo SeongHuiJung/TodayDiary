@@ -99,8 +99,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         
 
                         /// 가입 했다가 애플로 로그인 설정 직접 삭제한 경우
-                    case .revoked,.notFound:
-                        print("Apple ID not found or revoked.")
+                    case .revoked:
+                        print("계정 Apple ID revoked.")
+                        // 로그인 화면으로 전환
+                        guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+                        self.window?.rootViewController = loginVC
+                    case .notFound:
+                        print("계정 Apple ID not found")
                         // 로그인 화면으로 전환
                         guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
                         self.window?.rootViewController = loginVC

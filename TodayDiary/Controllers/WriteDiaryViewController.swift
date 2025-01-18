@@ -225,7 +225,6 @@ class WriteDiaryViewController: UIViewController {
         checkSaveBtnIsActive()
     }
     @objc func deleteDataBtnTapped() {
-        print("click")
         guard let id = data.3 else { return }
         //deleteData(id: id)
         

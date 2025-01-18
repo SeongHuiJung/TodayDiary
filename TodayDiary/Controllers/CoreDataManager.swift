@@ -103,19 +103,19 @@ class CoreDataManager {
             //print("\(month)월 \(day)일 데이터 불러오기 성공")
             for result in results {
                 if let _date = result.value(forKey: "date") as? Date {
-                    print("Fetched date: \(_date)")
+                    //print("Fetched date: \(_date)")
                     date = _date
                 }
                 if let _emoji = result.value(forKey: "emoji") as? Int {
-                    print("Fetched emoji: \(_emoji)")
+                    //print("Fetched emoji: \(_emoji)")
                     emoji = _emoji
                 }
                 if let _text = result.value(forKey: "text") as? String {
-                    print("Fetched text: \(_text)")
+                    //print("Fetched text: \(_text)")
                     text = _text
                 }
                 if let _uuid = result.value(forKey: "uuid") as? UUID {
-                    print("Fetched uuid: \(_uuid)")
+                    //print("Fetched uuid: \(_uuid)")
                     uuid = _uuid
                 }
             }
@@ -158,6 +158,58 @@ class CoreDataManager {
                 }
                 if let uuid = result.value(forKey: "uuid") as? UUID {
                     print("Fetched content: \(uuid)")
+                }
+            }
+        } catch {
+            print("Error fetching data: \(error)")
+        }
+    }
+    
+    // 로컬의 모든 데이터 저장
+    // 엔티티 존재하면 수정, 존재하지 않으면 생성
+    // 이후에 수정
+    func fetchAllDiaryAndSaveOrUpdate() {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Diary")
+        do {
+            let results = try context.fetch(fetchRequest)
+            for result in results {
+                var save_date = Date()
+                var save_emoji = 1
+                var save_text = ""
+                var save_uuid = UUID()
+                
+                if let date = result.value(forKey: "date") as? Date {
+                    print("Fetched title: \(date)")
+                    save_date = date
+                }
+                if let emoji = result.value(forKey: "emoji") as? Int {
+                    print("Fetched content: \(emoji)")
+                    save_emoji = emoji
+                }
+                if let text = result.value(forKey: "text") as? String {
+                    print("Fetched content: \(text)")
+                    save_text = text
+                }
+                if let uuid = result.value(forKey: "uuid") as? UUID {
+                    print("Fetched content: \(uuid)")
+                    save_uuid = uuid
+                }
+                
+                // 같은 날짜의 엔티티가 있는지 확인
+                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Diary")
+                fetchRequest.predicate = NSPredicate(format: "date == %@", save_date as CVarArg)
+                do {
+                    let result = try context.fetch(fetchRequest)
+                    // 같은 날짜의 엔티티 존재 -> 업데이트 해야함
+                    if !result.isEmpty {
+                        updateDiary(id: save_uuid, text: save_text, emoji: save_emoji) {
+                        }
+                    }
+                    // 같은 날짜의 엔티티 존재x -> 생성 해야함
+                    else {
+                    }
+                } catch {
+                    print("Error: \(error.localizedDescription)")
                 }
             }
         } catch {
