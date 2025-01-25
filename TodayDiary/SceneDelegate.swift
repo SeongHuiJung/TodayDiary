@@ -8,6 +8,7 @@
 import UIKit
 import AuthenticationServices
 import CoreData
+import CloudKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -65,55 +66,72 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         CoreDataManager.shared.saveContext()
     }
 
+    func checkICloudAccountStatus(completion: @escaping (Bool) -> Void) {
+        CKContainer.default().accountStatus { accountStatus, error in
+            if accountStatus == .available {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
     func checkAppleSignInState() {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         
         CoreDataManager.shared.fetchIsRegistered()
         
         if let userID = loadUserIDFromKeychain() {
-            appleIDProvider.getCredentialState(forUserID: userID) { (credentialState, error) in
-                DispatchQueue.main.async {
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    
-                    switch credentialState {
-                    case .authorized:
-                        print("Apple ID is authorized.")
-                        // DiaryMainViewController로 전환
-                        
-                        /// isRegistered 값이 존재하지 않는 경우
-                        guard let isRegistered = CoreDataManager.shared.isRegistered else {
-                            // 로그인 화면으로 전환
-                            print("계정이 존재하지 않습니다. 로그인 화면으로 전환합니다.")
-                            guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
-                            self.window?.rootViewController = loginVC
+            checkICloudAccountStatus { isICloudAvailable in
+                if isICloudAvailable == true {
+                    appleIDProvider.getCredentialState(forUserID: userID) { (credentialState, error) in
+                        DispatchQueue.main.async {
+                            let storyboard = UIStoryboard(name: "Main", bundle: nil)
                             
-                            return
-                        }
-                        
-                        /// 자동로그인 성공
-                        /// 네트워크 연결이 됐을때, 안됐을때 모두 수행
-                        print("계정이 존재합니다. 자동로그인을 진행합니다")
-                        guard let diaryMainVC = storyboard.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
-                        
-                        self.window?.rootViewController = UINavigationController(rootViewController: diaryMainVC)
-                        
+                            switch credentialState {
+                            case .authorized:
+                                print("Apple ID is authorized.")
+                                // DiaryMainViewController로 전환
+                                
+                                /// isRegistered 값이 존재하지 않는 경우
+                                guard let isRegistered = CoreDataManager.shared.isRegistered else {
+                                    // 로그인 화면으로 전환
+                                    print("계정이 존재하지 않습니다. 로그인 화면으로 전환합니다.")
+                                    guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+                                    self.window?.rootViewController = loginVC
+                                    
+                                    return
+                                }
+                                
+                                /// 자동로그인 성공
+                                /// 네트워크 연결이 됐을때, 안됐을때 모두 수행
+                                print("계정이 존재합니다. 자동로그인을 진행합니다")
+                                guard let diaryMainVC = storyboard.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
+                                
+                                self.window?.rootViewController = UINavigationController(rootViewController: diaryMainVC)
+                                
 
-                        /// 가입 했다가 애플로 로그인 설정 직접 삭제한 경우
-                    case .revoked:
-                        print("계정 Apple ID revoked.")
-                        // 로그인 화면으로 전환
-                        guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
-                        self.window?.rootViewController = loginVC
-                    case .notFound:
-                        print("계정 Apple ID not found")
-                        // 로그인 화면으로 전환
-                        guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
-                        self.window?.rootViewController = loginVC
-                    default:
-                        break
+                                /// 가입 했다가 애플로 로그인 설정 직접 삭제한 경우
+                            case .revoked, .notFound:
+                                print("계정 Apple ID revoked.")
+                                // 로그인 화면으로 전환
+                                guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+                                self.window?.rootViewController = loginVC
+                            default:
+                                break
+                            }
+                        }
+                    }
+                }
+                else {
+                    print("icloud 설정 확인해주세요")
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: Notification.Name("iCloudSetError"), object: nil)
                     }
                 }
             }
+            
+            
         } else {
             // Apple ID가 저장되지 않았을 경우, 로그인 화면으로 전환
             /// 로그아웃 후, 탈퇴한 경우, 생전 처음 회원 가입 하는 경우
