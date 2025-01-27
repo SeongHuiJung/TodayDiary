@@ -13,23 +13,7 @@ func showToast(view : UIView , _ message : String, withDuration: Double, delay: 
     let toastCheckImage = UIImageView()
     let toastBackground = UIView()
     
-    // toastBackground
-    toastBackground.frame = CGRect(x: 0, y: 0, width: 162, height: 32)
-    toastBackground.layer.backgroundColor = UIColor(red: 0.739, green: 0.59, blue: 0.59, alpha: 1).cgColor
-    toastBackground.layer.cornerRadius = 15
-    view.addSubview(toastBackground)
-    toastBackground.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        toastBackground.topAnchor.constraint(equalTo: view.topAnchor, constant: 75),
-        toastBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-        toastBackground.widthAnchor.constraint(equalToConstant: 162),
-        toastBackground.heightAnchor.constraint(equalToConstant: 32)
-    ])
-    
-    
-    
     // toastLabel
-    toastLabel.frame = CGRect(x: 0, y: 0, width: 113, height: 23)
     toastLabel.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
     toastLabel.font = UIFont(name: "AppleSDGothicNeo-Light", size: 14)
     toastLabel.text = message
@@ -39,11 +23,7 @@ func showToast(view : UIView , _ message : String, withDuration: Double, delay: 
     NSLayoutConstraint.activate([
         toastLabel.centerYAnchor.constraint(equalTo: toastBackground.centerYAnchor),
         toastLabel.leadingAnchor.constraint(equalTo: toastBackground.leadingAnchor, constant: 33),
-        toastLabel.widthAnchor.constraint(equalToConstant: 113),
-        toastLabel.heightAnchor.constraint(equalToConstant: 23)
     ])
-    
-    
     
     // toastCheckImage
     toastCheckImage.frame = CGRect(x: 0, y: 0, width: 22, height: 22)
@@ -58,8 +38,21 @@ func showToast(view : UIView , _ message : String, withDuration: Double, delay: 
         toastCheckImage.heightAnchor.constraint(equalToConstant: 22)
     ])
     
+    toastLabel.sizeToFit()
+    let labelHeight = toastLabel.frame.size.width
+    print("labelHeight \(labelHeight)")
     
-    
+    // toastBackground
+    toastBackground.layer.backgroundColor = UIColor(red: 0.739, green: 0.59, blue: 0.59, alpha: 1).cgColor
+    toastBackground.layer.cornerRadius = 15
+    view.addSubview(toastBackground)
+    toastBackground.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        toastBackground.topAnchor.constraint(equalTo: view.topAnchor, constant: 75),
+        toastBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        toastBackground.widthAnchor.constraint(equalToConstant: labelHeight + 45),
+        toastBackground.heightAnchor.constraint(equalToConstant: 32)
+    ])
     
     UIView.animate(withDuration: withDuration, delay: delay, options: .curveEaseOut, animations: {
         toastBackground.alpha = 0.0
