@@ -9,7 +9,7 @@ import Foundation
 import FSCalendar
 
 func setCalendarDesign(calendarView: FSCalendar!) {
-    calendarView.placeholderType = .fillSixRows
+    calendarView.placeholderType = .fillHeadTail
     
     calendarView.locale = Locale(identifier: "ko_KR")
     calendarView.scrollEnabled = true   // 가능
