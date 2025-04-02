@@ -8,11 +8,12 @@
 import UIKit
 import AuthenticationServices
 import CoreData
+import CloudKit
+import WidgetKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
@@ -32,6 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.checkAppleSignInState()
         }
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -70,45 +72,57 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         CoreDataManager.shared.fetchIsRegistered()
         
-        if let userID = loadUserIDFromKeychain() {
-            appleIDProvider.getCredentialState(forUserID: userID) { (credentialState, error) in
-                DispatchQueue.main.async {
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    
-                    switch credentialState {
-                    case .authorized:
-                        print("Apple ID is authorized.")
-                        // DiaryMainViewController로 전환
-                        
-                        /// isRegistered 값이 존재하지 않는 경우
-                        guard let isRegistered = CoreDataManager.shared.isRegistered else {
-                            // 로그인 화면으로 전환
-                            print("계정이 존재하지 않습니다. 로그인 화면으로 전환합니다.")
-                            guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
-                            self.window?.rootViewController = loginVC
+        if let userID = AccessManager.shared.loadUserIDFromKeychain() {
+            AccessManager.shared.checkICloudAccountStatus { isICloudAvailable in
+                if isICloudAvailable == true {
+                    appleIDProvider.getCredentialState(forUserID: userID) { (credentialState, error) in
+                        DispatchQueue.main.async {
+                            let storyboard = UIStoryboard(name: "Main", bundle: nil)
                             
-                            return
-                        }
-                        
-                        /// 자동로그인 성공
-                        /// 네트워크 연결이 됐을때, 안됐을때 모두 수행
-                        print("계정이 존재합니다. 자동로그인을 진행합니다")
-                        guard let diaryMainVC = storyboard.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
-                        
-                        self.window?.rootViewController = UINavigationController(rootViewController: diaryMainVC)
-                        
+                            switch credentialState {
+                            case .authorized:
+                                print("Apple ID is authorized.")
+                                // DiaryMainViewController로 전환
+                                
+                                /// isRegistered 값이 존재하지 않는 경우
+                                guard let isRegistered = CoreDataManager.shared.isRegistered else {
+                                    // 로그인 화면으로 전환
+                                    print("계정이 존재하지 않습니다. 로그인 화면으로 전환합니다.")
+                                    guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+                                    self.window?.rootViewController = loginVC
+                                    
+                                    return
+                                }
+                                
+                                /// 자동로그인 성공
+                                /// 네트워크 연결이 됐을때, 안됐을때 모두 수행
+                                print("계정이 존재합니다. 자동로그인을 진행합니다")
+                                guard let diaryMainVC = storyboard.instantiateViewController(withIdentifier: "DiaryMainViewController") as? DiaryMainViewController else { return }
+                                
+                                self.window?.rootViewController = UINavigationController(rootViewController: diaryMainVC)
+                                
 
-                        /// 가입 했다가 애플로 로그인 설정 직접 삭제한 경우
-                    case .revoked,.notFound:
-                        print("Apple ID not found or revoked.")
-                        // 로그인 화면으로 전환
-                        guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
-                        self.window?.rootViewController = loginVC
-                    default:
-                        break
+                                /// 가입 했다가 애플로 로그인 설정 직접 삭제한 경우
+                            case .revoked, .notFound:
+                                print("계정 Apple ID revoked.")
+                                // 로그인 화면으로 전환
+                                guard let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController else { return }
+                                self.window?.rootViewController = loginVC
+                            default:
+                                break
+                            }
+                        }
+                    }
+                }
+                else {
+                    print("icloud 설정 확인해주세요")
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: Notification.Name("iCloudSetError"), object: nil)
                     }
                 }
             }
+            
+            
         } else {
             // Apple ID가 저장되지 않았을 경우, 로그인 화면으로 전환
             /// 로그아웃 후, 탈퇴한 경우, 생전 처음 회원 가입 하는 경우
@@ -119,26 +133,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.window?.rootViewController = loginVC
             }
         }
-    }
-    
-    // Keychain에서 userID 가져오기
-    func loadUserIDFromKeychain() -> String? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: "AppleUserID",
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne
-        ]
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
-        if status == errSecSuccess {
-            if let data = item as? Data {
-                print("Keychain User ID 불러오기 성공")
-                return String(data: data, encoding: .utf8)
-            }
-        } else {
-            print("User ID 불러오기 실패, 상태: \(status)")
-        }
-        return nil
     }
 }

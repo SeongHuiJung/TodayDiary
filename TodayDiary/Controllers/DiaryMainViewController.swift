@@ -9,14 +9,9 @@ import UIKit
 import CoreData
 import FSCalendar
 import CloudKit
+import WidgetKit
 
 class DiaryMainViewController: UIViewController {
-    
-    // 이상하게 이거 지우면 NetworkCheck의 monitor.pathUpdateHandler가 실행되지 않음..
-//    private let empty: UILabel = {
-//        let label = UILabel()
-//        return label
-//    }()
 
     private let settingBtn: UIButton = {
         let button = UIButton()
@@ -59,11 +54,14 @@ class DiaryMainViewController: UIViewController {
 """
             showInfoPopUpView(infoText: popText, acceptBtnText: "확인")
         }
+        
+        calendarView.reloadData() // cell reload
     }
     
     override func viewWillAppear(_ animated: Bool) {
         // 데이터 변경 후 메인화면으로 돌아올 시 cell 업데이트
         calendarView.reloadData()
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -72,6 +70,10 @@ class DiaryMainViewController: UIViewController {
         // 해당 작업을 하지 않으면 WriteDiaryVC 에서 사용하던 제스쳐 설정을 그대로 따르기 때문에 메인 페이지에서 오류발생
         // 또한 viewDidAppear 에서 실행하는 이유는 write WriteDiaryVC 에서 이전 페이지로 온전히 다 넘어가지 않더라도 viewWillAppear 가 실행되기 때문에 WriteDiaryVC 에서 더이상 제스쳐가 먹히지 않음
         navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
+        // 위젯 업데이트
+        WidgetData.shared.isLogin = AccessManager.shared.loadUserIDFromKeychain() != nil ? true : false
+        WidgetCenter.shared.reloadTimelines(ofKind: "DiaryWidget")
     }
     
     deinit {
@@ -151,7 +153,6 @@ class DiaryMainViewController: UIViewController {
     }
     
     @objc func goSettingPage(){
-        print("click")
         guard let secondVC = storyboard?.instantiateViewController(withIdentifier: "SettingViewController") as? SettingViewController else { return }
         secondVC.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(secondVC, animated: true)
@@ -179,12 +180,17 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         cell.configure(with: "\(day)") // 셀에 날짜를 표시
         
         // 해당 일에 맞는 데이터 로드
-        let data = CoreDataManager.shared.loadDiary(dateData: date)
-        
-        // 해당 일에 데이터가 있는 경우에만 데이터 set
-        if data.0 != nil {
-            cell.setCalendarCellData(_date: data.0!, _emoji: data.1, _text: data.2, _uuid: data.3!)
+        CoreDataManager.shared.loadDiary(dateData: date) { date, emoji , text , uuid in
+            
+            // 해당 일에 데이터가 있는 경우에만 데이터 set
+            guard let date = date else { return }
+            cell.setCalendarCellData(_date: date, _emoji: emoji, _text: text, _uuid: uuid!)
         }
+        
+        
+//        if data.0 != nil {
+//            cell.setCalendarCellData(_date: data.0!, _emoji: data.1, _text: data.2, _uuid: data.3!)
+//        }
         
         cell.setCalendarCellDesign(monthPosition: position, date: date)
         return cell
@@ -199,7 +205,12 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
         
         // 데이터 전달
         secondVC.date = date
-        secondVC.data = CoreDataManager.shared.loadDiary(dateData: date)
+        CoreDataManager.shared.loadDiary(dateData: date) { date, emoji , text , uuid in
+            
+            // 해당 일에 데이터가 있는 경우에만 데이터 set
+            guard let date = date else { return }
+            secondVC.data = (date,emoji,text,uuid)
+        }
         navigationController?.pushViewController(secondVC, animated: false)
     }
 }

@@ -27,7 +27,7 @@ class WriteDiaryViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(saveBtnTapped), for: .touchUpInside)
-        button.isEnabled = false
+        //button.isEnabled = false
         return button
     }()
     
@@ -35,7 +35,7 @@ class WriteDiaryViewController: UIViewController {
     
     var isSaveBtnEnabled: Bool = false {
         didSet {
-            saveBtn.isEnabled = isSaveBtnEnabled
+            //saveBtn.isEnabled = isSaveBtnEnabled
             saveBtn.backgroundColor = isSaveBtnEnabled ? UIColor(red: 0.818, green: 0.59, blue: 0.59, alpha: 1) : UIColor(red: 0.837, green: 0.837, blue: 0.837, alpha: 1)
         }
     }
@@ -200,8 +200,13 @@ class WriteDiaryViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     @objc func saveBtnTapped() {
-        if let uuid = data.3 { updateData(id: uuid) }
-        else { createData() }
+        if isSaveBtnEnabled == true {
+            if let uuid = data.3 { updateData(id: uuid) }
+            else { createData() }
+        }
+        else {
+            showToast(view: view, "상단의 기분스티커를 선택하고 저장해주세요 :)", withDuration: 2.0, delay: 1.5)
+        }
     }
     @objc func setEmojiTapped() {
         let viewController = EmojiViewController()
@@ -225,7 +230,6 @@ class WriteDiaryViewController: UIViewController {
         checkSaveBtnIsActive()
     }
     @objc func deleteDataBtnTapped() {
-        print("click")
         guard let id = data.3 else { return }
         //deleteData(id: id)
         

@@ -237,10 +237,7 @@ extension BottomSheetViewController {
 
 extension BottomSheetViewController {
     // emoji cell 클릭 관련
-    
-    
     @objc func closeBottomSheet() {
-        print("시트내리기")
         hideBottomSheetAndGoBack()
     }
     

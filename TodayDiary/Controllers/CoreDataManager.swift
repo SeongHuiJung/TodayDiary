@@ -7,15 +7,23 @@
 
 import Foundation
 import CoreData
+import WidgetKit
 
 class CoreDataManager {
     static let shared = CoreDataManager()
     var isRegistered: Int?
-
-    private init() {}
+    private let appGroup = "group.jayseong.TodayDiary"
 
     lazy var persistentContainer: NSPersistentCloudKitContainer = {
+        
+        guard let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.jayseong.TodayDiary") else { fatalError("Shared file container could not be created.") }
+        
+        let storeURL = url.appending(path: "TodayDiary.sqlite")
+        let storeDescription = NSPersistentStoreDescription(url: storeURL)
+        storeDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.com.jayseong.TodayDiary")
+        
         let container = NSPersistentCloudKitContainer(name: "TodayDiary")
+        container.persistentStoreDescriptions = [storeDescription]
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
@@ -52,23 +60,32 @@ class CoreDataManager {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>.init(entityName: "Diary")
         fetchRequest.predicate = NSPredicate(format: "uuid = %@", id.uuidString)
         
-        do {
-            guard let result = try? context.fetch(fetchRequest),
-                  let object = result.first as? NSManagedObject else { return }
-            
-            object.setValue(text, forKey: "text")
-            object.setValue(emoji, forKey: "emoji")
+        guard let result = try? context.fetch(fetchRequest),
+              let object = result.first as? NSManagedObject else { return }
+        
+        object.setValue(text, forKey: "text")
+        object.setValue(emoji, forKey: "emoji")
 
-            try context.save()
-            
-            closure()
-            print("일기 데이터 업데이트 성공 ! :)")
+        saveContext()
+        closure()
+        print("일기 데이터 업데이트 성공 ! :)")
+    }
+    
+    func fetch() {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Diary")
+        
+        do {
+            _ = try context.fetch(fetchRequest)
+            //WidgetData.shared.weekendData = "test"
+            //return fetchResult
+            //completion()
         } catch {
-            print("error: \(error.localizedDescription)")
+            let nserror = error as NSError
+            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
         }
     }
     
-    func loadDiary(dateData: Date) -> (Date?, Int?, String?, UUID?) {
+    func loadDiary(dateData: Date, completion: (Date?, Int?, String?, UUID?)-> ()) {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Diary")
         
         let dateFormatter = DateFormatter()
@@ -81,7 +98,7 @@ class CoreDataManager {
         
         dateFormatter.dateFormat = "d"
         let day = Int(dateFormatter.string(from: dateData))!
-
+        
         var date : Date?
         var emoji : Int?
         var text : String?
@@ -100,44 +117,137 @@ class CoreDataManager {
         
         do {
             let results = try context.fetch(fetchRequest)
-            //print("\(month)월 \(day)일 데이터 불러오기 성공")
             for result in results {
                 if let _date = result.value(forKey: "date") as? Date {
-                    print("Fetched date: \(_date)")
                     date = _date
                 }
                 if let _emoji = result.value(forKey: "emoji") as? Int {
-                    print("Fetched emoji: \(_emoji)")
                     emoji = _emoji
                 }
                 if let _text = result.value(forKey: "text") as? String {
-                    print("Fetched text: \(_text)")
                     text = _text
                 }
                 if let _uuid = result.value(forKey: "uuid") as? UUID {
-                    print("Fetched uuid: \(_uuid)")
                     uuid = _uuid
                 }
             }
+            completion(date, emoji, text, uuid)
         } catch {
             print("Error fetching December data: \(error)")
         }
-        return (date, emoji, text, uuid)
+    }
+    
+    func loadWeekDay() -> (DateComponents, DateComponents, Date) {
+        let calendar = Calendar.current
+        let inputWeekday = calendar.component(.weekday, from: Date())
+        
+        guard let sundayDate = calendar.date(byAdding: .day, value: -(inputWeekday - 1), to: Date()) else {
+            fatalError("일요일 계산 실패")
+        }
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+
+        var sundayYear = 0
+        var sundayMonth = 0
+        var sundayDay = 0
+        
+        if let weekDate = calendar.date(byAdding: .day, value: 0, to: sundayDate) {
+            dateFormatter.dateFormat = "yyyy"
+            sundayYear = Int(dateFormatter.string(from: weekDate))!
+            
+            dateFormatter.dateFormat = "M"
+            sundayMonth = Int(dateFormatter.string(from: weekDate))!
+            
+            dateFormatter.dateFormat = "d"
+            sundayDay = Int(dateFormatter.string(from: weekDate))!
+        }
+        
+        var saturdayYear = 0
+        var saturdayMonth = 0
+        var saturdayDay = 0
+        if let weekDate = calendar.date(byAdding: .day, value: 6, to: sundayDate) {
+            dateFormatter.dateFormat = "yyyy"
+            saturdayYear = Int(dateFormatter.string(from: weekDate))!
+            
+            dateFormatter.dateFormat = "M"
+            saturdayMonth = Int(dateFormatter.string(from: weekDate))!
+            
+            dateFormatter.dateFormat = "d"
+            saturdayDay = Int(dateFormatter.string(from: weekDate))!
+        }
+        
+        let startComponents = DateComponents(year: sundayYear, month: sundayMonth, day: sundayDay, hour: 0, minute: 0, second: 0)
+        let endComponents = DateComponents(year: saturdayYear, month: saturdayMonth, day: saturdayDay, hour: 23, minute: 59, second: 59)
+
+        return (startComponents, endComponents, sundayDate)
+    }
+    
+    func loadWidgetData(completion: ([(Int,Int)], String) -> ()) {
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        var diaryData = [(Int,Int)]()
+        
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Diary")
+        
+        let dateComponents = loadWeekDay()
+        let startComponents = dateComponents.0
+        let endComponents = dateComponents.1
+        let sundayDate = dateComponents.2
+        
+        // 위젯에 나타낼 년도,월 set
+        var dateString = ""
+        dateFormatter.dateFormat = "yyyy년 M월"
+        dateString = dateFormatter.string(from: Date())
+        
+        // 위젯에 나타낼 day list set
+        for i in 0..<7 {
+            if let weekDate = calendar.date(byAdding: .day, value: i, to: sundayDate) {
+                dateFormatter.dateFormat = "d"
+                let day = Int(dateFormatter.string(from: weekDate))!
+                diaryData.append((day,0))
+            }
+        }
+        
+        if let startDate = calendar.date(from: startComponents),
+           let endDate = calendar.date(from: endComponents) {
+            let predicate = NSPredicate(format: "date >= %@ AND date <= %@", startDate as NSDate, endDate as NSDate)
+            fetchRequest.predicate = predicate
+        }
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            for result in results {
+                if let date = result.value(forKey: "date") as? Date {
+                    dateFormatter.dateFormat = "d"
+                }
+                if let emoji = result.value(forKey: "emoji") as? Int,
+                    let date = result.value(forKey: "date") as? Date {
+                    dateFormatter.dateFormat = "d"
+                    let day = Int(dateFormatter.string(from: date))!
+                    
+                    for index in 0..<7 {
+                        if diaryData[index].0 == day {
+                            diaryData[index].1 = emoji
+                        }
+                    }
+                }
+            }
+            completion(diaryData, dateString)
+        } catch {
+            print("Error fetching December data: \(error)")
+        }
     }
     
     func deleteDiary(id: UUID) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>.init(entityName: "Diary")
         fetchRequest.predicate = NSPredicate(format: "uuid = %@", id.uuidString)
         
-        do {
-            guard let result = try? context .fetch(fetchRequest),
-                  let object = result.first as? NSManagedObject else { return }
-            context.delete(object)
-            
-            try context.save()
-        } catch {
-            print("error: \(error.localizedDescription)")
-        }
+        guard let result = try? context .fetch(fetchRequest),
+              let object = result.first as? NSManagedObject else { return }
+        context.delete(object)
+        saveContext()
     }
     
     // 디버깅 전용 함수
@@ -158,6 +268,58 @@ class CoreDataManager {
                 }
                 if let uuid = result.value(forKey: "uuid") as? UUID {
                     print("Fetched content: \(uuid)")
+                }
+            }
+        } catch {
+            print("Error fetching data: \(error)")
+        }
+    }
+    
+    // 로컬의 모든 데이터 저장
+    // 엔티티 존재하면 수정, 존재하지 않으면 생성
+    // 이후에 수정
+    func fetchAllDiaryAndSaveOrUpdate() {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Diary")
+        do {
+            let results = try context.fetch(fetchRequest)
+            for result in results {
+                var save_date = Date()
+                var save_emoji = 1
+                var save_text = ""
+                var save_uuid = UUID()
+                
+                if let date = result.value(forKey: "date") as? Date {
+                    print("Fetched title: \(date)")
+                    save_date = date
+                }
+                if let emoji = result.value(forKey: "emoji") as? Int {
+                    print("Fetched content: \(emoji)")
+                    save_emoji = emoji
+                }
+                if let text = result.value(forKey: "text") as? String {
+                    print("Fetched content: \(text)")
+                    save_text = text
+                }
+                if let uuid = result.value(forKey: "uuid") as? UUID {
+                    print("Fetched content: \(uuid)")
+                    save_uuid = uuid
+                }
+                
+                // 같은 날짜의 엔티티가 있는지 확인
+                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Diary")
+                fetchRequest.predicate = NSPredicate(format: "date == %@", save_date as CVarArg)
+                do {
+                    let result = try context.fetch(fetchRequest)
+                    // 같은 날짜의 엔티티 존재 -> 업데이트 해야함
+                    if !result.isEmpty {
+                        updateDiary(id: save_uuid, text: save_text, emoji: save_emoji) {
+                        }
+                    }
+                    // 같은 날짜의 엔티티 존재x -> 생성 해야함
+                    else {
+                    }
+                } catch {
+                    print("Error: \(error.localizedDescription)")
                 }
             }
         } catch {
@@ -219,9 +381,7 @@ class CoreDataManager {
                 // Execute batch delete
                 try context.execute(deleteRequest)
             }
-            
-            // Save context after deletion
-            try context.save()
+            saveContext()
             print("IsRegistered 가 성공적으로 삭제되었습니다.")
         } catch {
             print("IsRegistered를 삭제하는 중 오류 발생: \(error.localizedDescription)")
@@ -233,6 +393,13 @@ class CoreDataManager {
         if context.hasChanges {
             do {
                 try context.save()
+                loadWidgetData() { diaryData, dateString in
+                    print("loadWidgetData 호출")
+                    WidgetData.shared.diaryData = diaryData
+                    WidgetData.shared.yearMonthdate = dateString
+                    WidgetData.shared.isLogin = AccessManager.shared.loadUserIDFromKeychain() != nil ? true : false
+                    WidgetCenter.shared.reloadTimelines(ofKind: "DiaryWidget")
+                }
             } catch {
                 let nserror = error as NSError
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
