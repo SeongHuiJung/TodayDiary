@@ -9,11 +9,11 @@ import UIKit
 import AuthenticationServices
 import CoreData
 import CloudKit
+import WidgetKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
@@ -33,6 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.checkAppleSignInState()
         }
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -66,23 +67,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         CoreDataManager.shared.saveContext()
     }
 
-    func checkICloudAccountStatus(completion: @escaping (Bool) -> Void) {
-        CKContainer.default().accountStatus { accountStatus, error in
-            if accountStatus == .available {
-                completion(true)
-            } else {
-                completion(false)
-            }
-        }
-    }
-    
     func checkAppleSignInState() {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         
         CoreDataManager.shared.fetchIsRegistered()
         
-        if let userID = loadUserIDFromKeychain() {
-            checkICloudAccountStatus { isICloudAvailable in
+        if let userID = AccessManager.shared.loadUserIDFromKeychain() {
+            AccessManager.shared.checkICloudAccountStatus { isICloudAvailable in
                 if isICloudAvailable == true {
                     appleIDProvider.getCredentialState(forUserID: userID) { (credentialState, error) in
                         DispatchQueue.main.async {
@@ -142,26 +133,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self.window?.rootViewController = loginVC
             }
         }
-    }
-    
-    // Keychain에서 userID 가져오기
-    func loadUserIDFromKeychain() -> String? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: "AppleUserID",
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne
-        ]
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
-        if status == errSecSuccess {
-            if let data = item as? Data {
-                print("Keychain User ID 불러오기 성공")
-                return String(data: data, encoding: .utf8)
-            }
-        } else {
-            print("User ID 불러오기 실패, 상태: \(status)")
-        }
-        return nil
     }
 }

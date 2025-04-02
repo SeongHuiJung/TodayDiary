@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import WidgetKit
 
 class SettingViewController: UIViewController {
     
@@ -150,6 +151,10 @@ iCloud 용량이 가득찰 경우 저장되지 않아요.
             
             // keychain 에 저장된 로그인 정보 삭제
             deleteUserIDFromKeychain()
+            
+            // 위젯 업데이트
+            WidgetData.shared.isLogin = false
+            WidgetCenter.shared.reloadTimelines(ofKind: "DiaryWidget")
         }
         popVC.modalPresentationStyle = .overFullScreen
         self.present(popVC, animated: false, completion: nil)
