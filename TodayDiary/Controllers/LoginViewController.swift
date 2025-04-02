@@ -36,8 +36,8 @@ class LoginViewController: UIViewController {
         NSLayoutConstraint.activate([
             appleLoginBtn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             appleLoginBtn.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 41),
-            appleLoginBtn.heightAnchor.constraint(equalToConstant: 50), // 버튼 높이
-            appleLoginBtn.widthAnchor.constraint(equalToConstant: 250) // 버튼 너비
+            appleLoginBtn.heightAnchor.constraint(equalToConstant: 50),
+            appleLoginBtn.widthAnchor.constraint(equalToConstant: 250)
         ])
     }
     
@@ -47,15 +47,11 @@ class LoginViewController: UIViewController {
         let provider = ASAuthorizationAppleIDProvider()
         let requset = provider.createRequest()
         
-        // 사용자에게 제공받을 정보를 선택 (이름 및 이메일) -- 아래 이미지 참고
         requset.requestedScopes = [.fullName, .email]
         
         let controller = ASAuthorizationController(authorizationRequests: [requset])
-        // 로그인 정보 관련 대리자 설정
         controller.delegate = self
-        // 인증창을 보여주기 위해 대리자 설정
         controller.presentationContextProvider = self
-        // 요청
         controller.performRequests()
     }
     
@@ -130,8 +126,6 @@ extension LoginViewController: ASAuthorizationControllerDelegate,
             print("Keychain에 User ID 저장 실패, 상태: \(status)")
         }
     }
-    
-    
     
     // 로그인 실패 시
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {

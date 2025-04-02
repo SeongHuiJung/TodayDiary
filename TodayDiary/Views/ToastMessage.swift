@@ -40,7 +40,6 @@ func showToast(view : UIView , _ message : String, withDuration: Double, delay: 
     
     toastLabel.sizeToFit()
     let labelHeight = toastLabel.frame.size.width
-    print("labelHeight \(labelHeight)")
     
     // toastBackground
     toastBackground.layer.backgroundColor = UIColor(red: 0.739, green: 0.59, blue: 0.59, alpha: 1).cgColor
