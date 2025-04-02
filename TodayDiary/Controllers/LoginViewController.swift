@@ -7,6 +7,7 @@
 
 import UIKit
 import AuthenticationServices
+import WidgetKit
 
 class LoginViewController: UIViewController {
 
@@ -14,7 +15,8 @@ class LoginViewController: UIViewController {
     let appleLoginBtn = ASAuthorizationAppleIDButton(type: .continue, style: .whiteOutline)
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        WidgetCenter.shared.reloadTimelines(ofKind: "DiaryWidget")
+        
         // Do any additional setup after loading the view.
         view.addSubview(appleLoginBtn)
         appleLoginBtn.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)

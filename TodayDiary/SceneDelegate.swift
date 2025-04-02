@@ -9,6 +9,7 @@ import UIKit
 import AuthenticationServices
 import CoreData
 import CloudKit
+import WidgetKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

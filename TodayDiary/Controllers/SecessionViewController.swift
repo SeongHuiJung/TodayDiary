@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import WidgetKit
 
 class SecessionViewController: UIViewController {
     
@@ -125,6 +126,10 @@ class SecessionViewController: UIViewController {
                 
                 // 전환 뷰 제거
                 transitionView.removeFromSuperview()
+                
+                // 위젯 업데이트
+                WidgetData.shared.isLogin = false
+                WidgetCenter.shared.reloadTimelines(ofKind: "DiaryWidget")
             }
             
             // keychain 에 저장된 로그인 정보 삭제
