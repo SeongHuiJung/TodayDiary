@@ -140,27 +140,6 @@ class SecessionViewController: UIViewController {
         self.present(popVC, animated: false, completion: nil)
     }
     
-    // 회원 탈퇴 시에만 수행해야함
-    // 모든 데이터 삭제
-    func deleteAllData() {
-        let entityNames = CoreDataManager.shared.context .persistentStoreCoordinator?.managedObjectModel.entities.compactMap { $0.name } ?? []
-        do {
-            for entityName in entityNames {
-                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-                
-                // Execute batch delete
-                try CoreDataManager.shared.context.execute(deleteRequest)
-            }
-            
-            // Save context after deletion
-            try CoreDataManager.shared.context.save()
-            print("모든 데이터가 성공적으로 삭제되었습니다.")
-        } catch {
-            print("모든 데이터를 삭제하는 중 오류 발생: \(error.localizedDescription)")
-        }
-    }
-    
     func setNavigationBar() {
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         navigationItem.title = "회원탈퇴"

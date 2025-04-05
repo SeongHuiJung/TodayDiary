@@ -321,7 +321,6 @@ class CoreDataManager {
     // MARK: - AccountInfo Entity Methods
     func fetchIsRegistered() {
         isRegistered = loadIsRegistered()
-        print("isRegistered: \(isRegistered)")
     }
 
     func loadIsRegistered() -> Int? {
@@ -331,8 +330,7 @@ class CoreDataManager {
             let results = try context.fetch(fetchRequest)
                      
             for result in results {
-                if let isRegistered = result.value(forKey: "isRegistered") as? Bool {
-                    print("isRegistered date: \(isRegistered)")
+                if let isRegistered = result.value(forKey: "isRegistered") as? Int {
                     return 1
                 }
             }

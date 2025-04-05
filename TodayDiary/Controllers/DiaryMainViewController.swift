@@ -189,11 +189,6 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
             cell.setCalendarCellData(_date: date, _emoji: emoji, _text: text, _uuid: uuid!)
         }
         
-        
-//        if data.0 != nil {
-//            cell.setCalendarCellData(_date: data.0!, _emoji: data.1, _text: data.2, _uuid: data.3!)
-//        }
-        
         cell.setCalendarCellDesign(monthPosition: position, date: date)
         return cell
     }
