@@ -74,6 +74,8 @@ class DiaryMainViewController: UIViewController {
         // 위젯 업데이트
         WidgetData.shared.isLogin = AccessManager.shared.loadUserIDFromKeychain() != nil ? true : false
         WidgetCenter.shared.reloadTimelines(ofKind: "DiaryWidget")
+        
+        CoreDataManager.shared.loadAllRegistered()
     }
     
     deinit {
@@ -186,11 +188,6 @@ extension DiaryMainViewController: FSCalendarDelegate, FSCalendarDataSource, FSC
             guard let date = date else { return }
             cell.setCalendarCellData(_date: date, _emoji: emoji, _text: text, _uuid: uuid!)
         }
-        
-        
-//        if data.0 != nil {
-//            cell.setCalendarCellData(_date: data.0!, _emoji: data.1, _text: data.2, _uuid: data.3!)
-//        }
         
         cell.setCalendarCellDesign(monthPosition: position, date: date)
         return cell

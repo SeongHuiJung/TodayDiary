@@ -11,6 +11,7 @@ class AccessManager {
     static let shared = AccessManager()
     private init() {}
     
+    // iCloud 설정 되어 있는지 확인
     func checkICloudAccountStatus(completion: @escaping (Bool) -> Void) {
         CKContainer.default().accountStatus { accountStatus, error in
             if accountStatus == .available {
