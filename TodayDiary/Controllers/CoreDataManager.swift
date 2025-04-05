@@ -362,20 +362,38 @@ class CoreDataManager {
         print("true 로 저장 성공")
     }
     
-    func deleteIsRegistered() {
-        let entityNames = context.persistentStoreCoordinator?.managedObjectModel.entities.compactMap { $0.name } ?? []
+    func loadAllRegistered() {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "AccountInfo")
         do {
-            for entityName in entityNames {
-                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-                
-                // Execute batch delete
-                try context.execute(deleteRequest)
+            let results = try context.fetch(fetchRequest)
+            for result in results {
+                if let accountInfo = result as? NSManagedObject {
+                }
+            }
+        } catch {
+            print("데이터 가져오기 실패: \(error)")
+        }
+    }
+    
+    func deleteAllData() {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Diary")
+        
+        if let results = try? context.fetch(fetchRequest) as? [NSManagedObject] {
+            for object in results {
+                context.delete(object)
             }
             saveContext()
-            print("IsRegistered 가 성공적으로 삭제되었습니다.")
-        } catch {
-            print("IsRegistered를 삭제하는 중 오류 발생: \(error.localizedDescription)")
+        }
+    }
+    
+    func deleteIsRegistered() {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "AccountInfo")
+        
+        if let results = try? context.fetch(fetchRequest) as? [NSManagedObject] {
+            for object in results {
+                context.delete(object)
+            }
+            saveContext()
         }
     }
 

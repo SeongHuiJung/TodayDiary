@@ -104,7 +104,7 @@ class SecessionViewController: UIViewController {
         // 클로저 전달
         // 최종 탈퇴 확인버튼 누를시 해당 함수 실행
         popVC.onAcceptAction = {
-            self.deleteAllData()
+            CoreDataManager.shared.deleteAllData()
             CoreDataManager.shared.deleteIsRegistered()
             
             let transitionView = UIView(frame: UIScreen.main.bounds)

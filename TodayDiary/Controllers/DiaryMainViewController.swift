@@ -74,6 +74,8 @@ class DiaryMainViewController: UIViewController {
         // 위젯 업데이트
         WidgetData.shared.isLogin = AccessManager.shared.loadUserIDFromKeychain() != nil ? true : false
         WidgetCenter.shared.reloadTimelines(ofKind: "DiaryWidget")
+        
+        CoreDataManager.shared.loadAllRegistered()
     }
     
     deinit {
