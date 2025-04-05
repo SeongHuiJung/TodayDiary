@@ -12,28 +12,19 @@ import WidgetKit
 class CoreDataManager {
     static let shared = CoreDataManager()
     var isRegistered: Int?
-    private let appGroup = "group.jayseong.TodayDiary"
-
+    
     lazy var persistentContainer: NSPersistentCloudKitContainer = {
-        
-        guard let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.jayseong.TodayDiary") else { fatalError("Shared file container could not be created.") }
-        
-        let storeURL = url.appending(path: "TodayDiary.sqlite")
-        let storeDescription = NSPersistentStoreDescription(url: storeURL)
-        storeDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.com.jayseong.TodayDiary")
-        
-        let container = NSPersistentCloudKitContainer(name: "TodayDiary")
-        container.persistentStoreDescriptions = [storeDescription]
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-            // 충돌 해결 정책 및 자동 병합 설정
-            container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            container.viewContext.automaticallyMergesChangesFromParent = true
-        })
-        return container
-    }()
+            let container = NSPersistentCloudKitContainer(name: "TodayDiary")
+            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+                if let error = error as NSError? {
+                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                }
+                // 충돌 해결 정책 및 자동 병합 설정
+                container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+                container.viewContext.automaticallyMergesChangesFromParent = true
+            })
+            return container
+        }()
 
     var context: NSManagedObjectContext {
         return persistentContainer.viewContext
@@ -330,7 +321,6 @@ class CoreDataManager {
     // MARK: - AccountInfo Entity Methods
     func fetchIsRegistered() {
         isRegistered = loadIsRegistered()
-        print("isRegistered: \(isRegistered)")
     }
 
     func loadIsRegistered() -> Int? {
@@ -340,8 +330,7 @@ class CoreDataManager {
             let results = try context.fetch(fetchRequest)
                      
             for result in results {
-                if let isRegistered = result.value(forKey: "isRegistered") as? Bool {
-                    print("isRegistered date: \(isRegistered)")
+                if let isRegistered = result.value(forKey: "isRegistered") as? Int {
                     return 1
                 }
             }
@@ -371,20 +360,38 @@ class CoreDataManager {
         print("true 로 저장 성공")
     }
     
-    func deleteIsRegistered() {
-        let entityNames = context.persistentStoreCoordinator?.managedObjectModel.entities.compactMap { $0.name } ?? []
+    func loadAllRegistered() {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "AccountInfo")
         do {
-            for entityName in entityNames {
-                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-                
-                // Execute batch delete
-                try context.execute(deleteRequest)
+            let results = try context.fetch(fetchRequest)
+            for result in results {
+                if let accountInfo = result as? NSManagedObject {
+                }
+            }
+        } catch {
+            print("데이터 가져오기 실패: \(error)")
+        }
+    }
+    
+    func deleteAllData() {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Diary")
+        
+        if let results = try? context.fetch(fetchRequest) as? [NSManagedObject] {
+            for object in results {
+                context.delete(object)
             }
             saveContext()
-            print("IsRegistered 가 성공적으로 삭제되었습니다.")
-        } catch {
-            print("IsRegistered를 삭제하는 중 오류 발생: \(error.localizedDescription)")
+        }
+    }
+    
+    func deleteIsRegistered() {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "AccountInfo")
+        
+        if let results = try? context.fetch(fetchRequest) as? [NSManagedObject] {
+            for object in results {
+                context.delete(object)
+            }
+            saveContext()
         }
     }
 
