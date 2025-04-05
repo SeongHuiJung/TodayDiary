@@ -12,28 +12,19 @@ import WidgetKit
 class CoreDataManager {
     static let shared = CoreDataManager()
     var isRegistered: Int?
-    private let appGroup = "group.jayseong.TodayDiary"
-
+    
     lazy var persistentContainer: NSPersistentCloudKitContainer = {
-        
-        guard let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.jayseong.TodayDiary") else { fatalError("Shared file container could not be created.") }
-        
-        let storeURL = url.appending(path: "TodayDiary.sqlite")
-        let storeDescription = NSPersistentStoreDescription(url: storeURL)
-        storeDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.com.jayseong.TodayDiary")
-        
-        let container = NSPersistentCloudKitContainer(name: "TodayDiary")
-        container.persistentStoreDescriptions = [storeDescription]
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-            // 충돌 해결 정책 및 자동 병합 설정
-            container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            container.viewContext.automaticallyMergesChangesFromParent = true
-        })
-        return container
-    }()
+            let container = NSPersistentCloudKitContainer(name: "TodayDiary")
+            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+                if let error = error as NSError? {
+                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                }
+                // 충돌 해결 정책 및 자동 병합 설정
+                container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+                container.viewContext.automaticallyMergesChangesFromParent = true
+            })
+            return container
+        }()
 
     var context: NSManagedObjectContext {
         return persistentContainer.viewContext
